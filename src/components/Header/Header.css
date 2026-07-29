@@ -1,0 +1,9 @@
+.header-logo {
+    background-color: var(--red);
+    height: 77px;
+}
+
+.nav-bar {
+    background-color: var(--gray);
+    height: 88px;
+}

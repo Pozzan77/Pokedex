@@ -1,6 +1,15 @@
+import "./Header.css"
+
 function Header() {
     return (
-        <h1>ola</h1>
+        <header>
+            <div className="header-logo">
+
+            </div>
+            <nav className="nav-bar">
+                
+            </nav>
+        </header>
     )
 }
 

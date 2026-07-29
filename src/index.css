@@ -1,0 +1,28 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+  }
+
+body {
+    margin: 0
+}
+
+:root {
+  --gray: #454040;
+  --red: #CE3434
+}
+
+#root {
+    min-height: 100svh;
+    width: 100%;
+}
+  
+img {
+    max-width: 100%;
+    display: block;
+}
