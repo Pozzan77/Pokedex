@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { getPokemon } from "../../pokemonApi";
-import "./pokecard.css"
+import "./Pokecard.css"
 
 
 function PokeCard({pokemon}) {
@@ -13,6 +13,7 @@ function PokeCard({pokemon}) {
             setPokemonData(data)
         }
         loadPokemonCard()
+
     }, [pokemon.name])
 
     if (!pokemonData) {
@@ -22,7 +23,13 @@ function PokeCard({pokemon}) {
     
     return (
         <div className="card">
-            <h3>{pokemon.name}</h3>
+            <div className="card-img">
+                <img src={pokemonData.sprites.front_default} alt={pokemon.name} />
+            </div>
+            <div className="card-name">
+                <h3>#{String(pokemonData.id).padStart(3, "0")}</h3>
+                <h2>{pokemonData.name.charAt(0).toUpperCase() + pokemonData.name.slice(1)}</h2>
+            </div>
         </div>
     )
 }

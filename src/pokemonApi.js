@@ -17,7 +17,7 @@ export async function getPokemon(name) {
 
 export async function getPokemonList() {
     const response = await fetch(
-      `${BASE_URL}/pokemon?limit=151`
+      `${BASE_URL}/pokemon?limit=1025`
     );
   
     if (!response.ok) {

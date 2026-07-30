@@ -13,14 +13,11 @@
 .search-bar {
     display: flex;
     align-items: center;
-  
     width: 30%;
-    padding: 8px 12px;
+    padding: 10px 16px;
     margin: 30px;
-  
     border: 2px solid #ccc;
     border-radius: 999px;
-  
     background: white;
   }
   
@@ -32,9 +29,8 @@
   
   .search-bar input {
     flex: 1;
-  
     border: none;
     outline: none;
-  
+    width: 100%;
     font-size: 16px;
   }
