@@ -1,6 +1,6 @@
 const BASE_URL = "https://pokeapi.co/api/v2"
 
-export async function getPokemonSearch(name) {
+export async function getPokemon(name) {
     const response = await fetch(
         `${BASE_URL}/pokemon/${name}`
     )
@@ -11,7 +11,7 @@ export async function getPokemonSearch(name) {
 
     const data = await response.json();
 
-    return data
+    return data;
     
 }
 
@@ -26,5 +26,5 @@ export async function getPokemonList() {
   
     const data = await response.json();
   
-    return data;
+    return data.results;
   }

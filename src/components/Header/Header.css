@@ -4,6 +4,37 @@
 }
 
 .nav-bar {
+    display: flex;
+    align-items: center;
     background-color: var(--gray);
     height: 88px;
 }
+
+.search-bar {
+    display: flex;
+    align-items: center;
+  
+    width: 30%;
+    padding: 8px 12px;
+    margin: 30px;
+  
+    border: 2px solid #ccc;
+    border-radius: 999px;
+  
+    background: white;
+  }
+  
+  .search-bar img {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+  }
+  
+  .search-bar input {
+    flex: 1;
+  
+    border: none;
+    outline: none;
+  
+    font-size: 16px;
+  }

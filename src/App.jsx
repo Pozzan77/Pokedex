@@ -1,32 +1,37 @@
 import { useState, useEffect } from "react"
-import { getPokemonList, getPokemonSearch } from "./pokemonApi.js"
+import { getPokemonList } from "./pokemonApi.js"
 import "./App.css"
 import Header from "./components/Header/Header.jsx"
+import PokeCard from "./components/Pokecard/Pokecard.jsx"
 
 
 function App() {
 
-  const [pokemonList, setPokemonList] = useState(null)
-  const [search, setSearch] = useState("")
+  const [pokemonList, setPokemonList] = useState([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     async function loadPokemonList() {
       const list = await getPokemonList();
+
+      console.log(list)
+
       setPokemonList(list);
     }
   
     loadPokemonList();
   }, []);
 
-  useEffect(() => {
-    if (pokemonSearch === "") return;
+  const filteredPokemon = pokemonList.filter(pokemon => {
+    return pokemon.name.toLowerCase().includes(search.toLowerCase());
+  });
 
-    async function SearchPokemon(params) {
-      
-    }
-    }
-  }, [search])
-
+  const PokemonElements = filteredPokemon.map(pokemon => {
+    return <PokeCard 
+      key={pokemon.name}
+      pokemon={pokemon}
+    />
+  })
 
   return (
     <div className="app">
@@ -35,11 +40,11 @@ function App() {
         setSearch={setSearch}
       />
       <main>
-
+        {PokemonElements}
       </main>
     </div>
   )
 
-}
+};
 
 export default App
