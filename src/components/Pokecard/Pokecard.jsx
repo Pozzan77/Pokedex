@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { getPokemon } from "../../pokemonApi";
 import "./Pokecard.css"
 
@@ -6,6 +7,8 @@ import "./Pokecard.css"
 function PokeCard({pokemon}) {
 
     const [pokemonData,setPokemonData] = useState(null)
+
+    const navigate = useNavigate()
 
     useEffect(() => {
         async function loadPokemonCard() {
@@ -22,7 +25,7 @@ function PokeCard({pokemon}) {
 
     
     return (
-        <div className="card">
+        <div className="card" onClick={() => navigate(`/pokemon/${pokemonData.name}`)}>
             <div className="card-img">
                 <img src={pokemonData.sprites.front_default} alt={pokemon.name} />
             </div>
