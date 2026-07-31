@@ -1,14 +1,26 @@
 .card {
+    position: relative;
     background-color: var(--card);
     display: flex;
-    margin: 50px;
-    gap: 150px;
+    margin: 100px;
+    margin-block: 15px;
     border: 2px solid gray;
     border-radius: 15px;
+    height: 150px;
 }
 
 .card-img {
     margin-left: 30px;
+}
+
+.card-img::before {
+    content: "";
+    position: absolute;
+    left: 200px;        
+    top: 15%;
+    height: 70%;         
+    width: 2px;
+    background-color: gray;
 }
 
 .card-img img{
@@ -19,5 +31,118 @@
 .card-name {
     display: flex;
     align-items: center;
+    margin-left: 100px;
     gap: 200px;
 }
+
+.card-name h2 {
+    font-size: 35px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 1;
+}
+
+.card-name h3 {
+    font-size: 30px;
+}
+
+.card-types {
+    display: flex;
+    gap: 15px;
+    width: 260px;
+    align-items: center;
+    margin-left: auto;
+    margin-right: 100px;
+    justify-content: center;
+}
+
+.card-types::before {
+    content: "";
+    position: absolute;
+    right: 450px;        
+    top: 15%;
+    height: 75%;         
+    width: 2px;
+    background-color: gray;
+}
+
+.card-types span {
+    color: white;
+    font-size: 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    padding: 10px;
+    padding-inline: 25px;
+    border-radius: 15px;
+}
+
+.type.normal {
+    background-color: #aab09f;
+  }
+  
+  .type.fire {
+    background-color: #ea7a3c;
+  }
+  
+  .type.water {
+    background-color: #539ae2;
+  }
+  
+  .type.electric {
+    background-color: #e5c531;
+  }
+  
+  .type.grass {
+    background-color: #71c558;
+  }
+  
+  .type.ice {
+    background-color: #70cbd4;
+  }
+  
+  .type.fighting {
+    background-color: #cb5f48;
+  }
+  
+  .type.poison {
+    background-color: #b468b7;
+  }
+  
+  .type.ground {
+    background-color: #cc9f4f;
+  }
+  
+  .type.flying {
+    background-color: #7da6de;
+  }
+  
+  .type.psychic {
+    background-color: #e5709b;
+  }
+  
+  .type.bug {
+    background-color: #94bc4a;
+  }
+  
+  .type.rock {
+    background-color: #b2a061;
+  }
+  
+  .type.ghost {
+    background-color: #846ab6;
+  }
+  
+  .type.dragon {
+    background-color: #6a7baf;
+  }
+  
+  .type.dark {
+    background-color: #736c75;
+  }
+  
+  .type.steel {
+    background-color: #89a1b0;
+  }
+  
+  .type.fairy {
+    background-color: #e397d1;
+  }

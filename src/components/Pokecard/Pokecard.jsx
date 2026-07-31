@@ -30,6 +30,11 @@ function PokeCard({pokemon}) {
                 <h3>#{String(pokemonData.id).padStart(3, "0")}</h3>
                 <h2>{pokemonData.name.charAt(0).toUpperCase() + pokemonData.name.slice(1)}</h2>
             </div>
+            <div className={"card-types"}>
+                {pokemonData.types.map(({ type }) => (
+                    <span key={type.name} className={`type ${type.name}`}>{type.name.charAt(0).toUpperCase() + type.name.slice(1)}</span>
+                ))}
+            </div>
         </div>
     )
 }

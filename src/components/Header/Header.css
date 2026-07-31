@@ -8,6 +8,7 @@
     align-items: center;
     background-color: var(--gray);
     height: 88px;
+    margin-bottom: 30px;
 }
 
 .search-bar {
@@ -15,7 +16,7 @@
     align-items: center;
     width: 30%;
     padding: 10px 16px;
-    margin: 30px;
+    margin: 100px;
     border: 2px solid #ccc;
     border-radius: 999px;
     background: white;
