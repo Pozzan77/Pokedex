@@ -14,6 +14,7 @@ function Home() {
     async function loadPokemonList() {
       const list = await getPokemonList();
 
+      await new Promise(resolve => setTimeout(resolve, 3000));
 
       setPokemonList(list);
     }
@@ -31,6 +32,7 @@ function Home() {
       pokemon={pokemon}
     />
   })
+
 
   return (
     <div>

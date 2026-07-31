@@ -1,18 +1,22 @@
 const BASE_URL = "https://pokeapi.co/api/v2"
 
-export async function getPokemon(name) {
-    const response = await fetch(
-        `${BASE_URL}/pokemon/${name}`
-    )
+const pokemonCache = {};
 
-    if (!response.ok) {
-        throw new Error ("pokemon not found")
+export async function getPokemon(name) {
+
+    if (pokemonCache[name]) {
+        return pokemonCache[name];
     }
+
+    const response = await fetch(
+        `https://pokeapi.co/api/v2/pokemon/${name}`
+    );
 
     const data = await response.json();
 
+    pokemonCache[name] = data;
+
     return data;
-    
 }
 
 export async function getPokemonList() {
