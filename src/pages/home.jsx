@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { getPokemonList } from "../pokemonApi.js";
 import "../App.css";
 import Header from "../components/Header/Header.jsx";
+import Footer from "../components/Footer/Footer.jsx"
 import PokeCard from "../components/Pokecard/Pokecard.jsx";
 
 
@@ -14,7 +15,6 @@ function Home() {
     async function loadPokemonList() {
       const list = await getPokemonList();
 
-      await new Promise(resolve => setTimeout(resolve, 3000));
 
       setPokemonList(list);
     }
@@ -35,7 +35,7 @@ function Home() {
 
 
   return (
-    <div>
+    <div className="app">
       <Header 
         search={search}
         setSearch={setSearch}
@@ -43,6 +43,7 @@ function Home() {
       <main>
         {PokemonElements}
       </main>
+      <Footer />
     </div>
   )
 

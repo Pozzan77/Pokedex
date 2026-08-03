@@ -7,14 +7,3 @@
 .app main {
     flex: 1;
 }
-
-.loading {
-  color: black;
-  background-color: white;
-  font-size: 50px;
-  position: fixed;
-  inset: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
