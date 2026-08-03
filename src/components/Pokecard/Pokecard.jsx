@@ -25,7 +25,7 @@ function PokeCard({pokemon}) {
 
     
     return (
-        <div className="card" onClick={() => navigate(`/pokemon/${pokemonData.name}`)}>
+        <div className="card" onClick={() => navigate(`/pokemon/${pokemonData.name}`, {state: pokemonData})}>
             <div className="card-img">
                 <img src={pokemonData.sprites.front_default} alt={pokemon.name} loading="lazy"/>
             </div>

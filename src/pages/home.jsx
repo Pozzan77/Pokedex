@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { getPokemonList } from "../pokemonApi.js";
 import "../App.css";
 import Header from "../components/Header/Header.jsx";
-import Footer from "../components/Footer/Footer.jsx"
+import Footer from "../components/Footer/Footer.jsx";
 import PokeCard from "../components/Pokecard/Pokecard.jsx";
 
 
@@ -39,6 +39,7 @@ function Home() {
       <Header 
         search={search}
         setSearch={setSearch}
+        showNav={true}
       />
       <main>
         {PokemonElements}

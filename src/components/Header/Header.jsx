@@ -4,9 +4,9 @@ function Header(props) {
     return (
         <header>
             <div className="header-logo">
-
+                
             </div>
-            <nav className="nav-bar">
+            { props.showNav && (<nav className="nav-bar">
                 <div className="search-bar">
                     <img src="src/assets/search.png" alt="" />
                     <input 
@@ -16,7 +16,7 @@ function Header(props) {
                     onChange={(e) => props.setSearch(e.target.value)}
                     />
                 </div>
-            </nav>
+            </nav>)}
         </header>
     )
 }
