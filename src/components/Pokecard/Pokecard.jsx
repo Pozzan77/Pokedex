@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { getPokemon } from "../../pokemonApi";
 import "./Pokecard.css"
@@ -20,9 +21,8 @@ function PokeCard({pokemon}) {
     }, [pokemon.name])
 
     if (!pokemonData) {
-        return null
+        return <div className="card loading">Loading...</div>
     }
-
     
     return (
         <div className="card" onClick={() => navigate(`/pokemon/${pokemonData.name}`)}>
@@ -42,4 +42,4 @@ function PokeCard({pokemon}) {
     )
 }
 
-export default PokeCard
+export default memo(PokeCard)

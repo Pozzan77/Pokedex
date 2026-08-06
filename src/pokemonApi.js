@@ -1,7 +1,7 @@
 const BASE_URL = "https://pokeapi.co/api/v2"
 
 const pokemonCache = {};
-let pokemonListCache = null;
+
 
 export async function getPokemon(name) {
 
@@ -20,36 +20,44 @@ export async function getPokemon(name) {
     return data;
 }
 
+const speciesCache = {};
+
 export async function getPokemonSpecies(name) {
+
+    if (speciesCache[name]) {
+        return speciesCache[name];
+    }
+
     const response = await fetch(
         `${BASE_URL}/pokemon-species/${name}`
     );
 
-    if (!response.ok) {
-        throw new Error("Couldn't load Pokémon species");
-    }
-
     const data = await response.json();
+
+    speciesCache[name] = data;
 
     return data;
 }
 
+let pokemonListCache = null;
+
 export async function getPokemonList() {
+
     if (pokemonListCache) {
-        return [...pokemonListCache];
+        return pokemonListCache;
     }
 
     const response = await fetch(
-      `${BASE_URL}/pokemon?limit=1025`
+        `${BASE_URL}/pokemon?limit=1025`
     );
 
     if (!response.ok) {
-      throw new Error("Couldn't load Pokémon list");
+        throw new Error("Couldn't load Pokémon list");
     }
 
     const data = await response.json();
 
     pokemonListCache = data.results;
 
-    return [...pokemonListCache];
+    return pokemonListCache;
 }

@@ -44,7 +44,7 @@ function Pokepage({pokemon}) {
             </div>            
             <div className="row">
                 <div className="portrait">
-                    <img src={pokemon.sprites.other["official-artwork"].front_default} alt={pokemon.species.name} />
+                    <img src={pokemon.sprites.other["official-artwork"].front_default} alt={pokemon.species.name} loading="lazy" />
                 </div>
                 <div className="bio">
                     <div className="dexN">
