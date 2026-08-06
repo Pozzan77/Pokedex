@@ -27,6 +27,7 @@
 
 .card-img {
     margin-left: 30px;
+    width: 150px;
 }
 
 .card-img::before {
@@ -40,8 +41,7 @@
 }
 
 .card-img img{
-    height: auto;
-    width: 150px;
+    width: 100%;
 }
 
 .card-name {

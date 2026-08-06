@@ -36,6 +36,13 @@ function Pokepage({pokemon}) {
             .replace(/\n|\f/g, " ")
     );
 
+    const genus = species.genera.find(
+        entry => entry.language.name === "en"
+    )?.genus;
+
+    const height = (pokemon.height / 10).toFixed(1);
+    const weight = (pokemon.weight / 10).toFixed(1);
+
     return (
         <div className="pokepage-container">
             <div className="detail"></div>
@@ -54,6 +61,32 @@ function Pokepage({pokemon}) {
                     <h3>
                         {description}
                     </h3>
+                    </div>
+                    <div className="row-type-species">
+                        <div className="types">
+                            <h3>
+                                Types:
+                            </h3>
+                            <div className="page-type">
+                                {pokemon.types.map(({ type }) => (
+                                <span key={type.name} className={`type ${type.name}`}>{type.name.charAt(0).toUpperCase() + type.name.slice(1)}</span>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="species">
+                            <h3>Species:</h3>
+                            <span>{genus}</span>
+                        </div>
+                    </div>
+                    <div className="proportions-row">
+                        <div className="height">
+                            <h3>Height:</h3>
+                            <span>{height} M</span>
+                        </div>
+                        <div className="weight">
+                            <h3>Weight:</h3>
+                            <span>{weight} Kg</span>
+                        </div>
                     </div>
                 </div>
             </div>
