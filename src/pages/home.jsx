@@ -9,7 +9,10 @@ import PokeCard from "../components/Pokecard/Pokecard.jsx";
 function Home() {
 
   const [pokemonList, setPokemonList] = useState([]);
-  const [visibleCount, setVisibleCount] = useState(30);
+  const [visibleCount, setVisibleCount] = useState(() => {
+    const saved = sessionStorage.getItem("visibleCount");
+    return saved ? Number(saved) : 30;
+  });
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -24,9 +27,22 @@ function Home() {
 
 }, []);
 
-  const filteredPokemon = pokemonList.filter(pokemon => {
-    return pokemon.name.toLowerCase().includes(search.toLowerCase());
-  });
+useEffect(() => {
+  sessionStorage.setItem(
+    "visibleCount",
+    visibleCount
+  );
+}, [visibleCount]);
+
+const filteredPokemon = pokemonList.filter(pokemon => {
+
+  const id = pokemon.url.split("/").filter(Boolean).pop();
+
+  return (
+    pokemon.name.toLowerCase().includes(search.toLowerCase()) ||
+    id.includes(search)
+  );
+});
 
   const PokemonElements = filteredPokemon.slice(0, visibleCount).map((pokemon,index) => {
     return <PokeCard 
@@ -45,13 +61,14 @@ function Home() {
       />
       <main>
         {PokemonElements}
-
-        <button
-          className="load-btn"
-          onClick={() => setVisibleCount(prev => prev + 30)}
-        >
-          Load More
-        </button>
+        {filteredPokemon.length > visibleCount && (
+          <button
+            className="load-btn"
+            onClick={() => setVisibleCount(prev => prev + 30)}
+          >
+            Load More
+          </button>
+        )}
       </main>
       <Footer />
     </div>
