@@ -8,33 +8,43 @@ function Pokepage({pokemon}) {
     
     useEffect(() => {
         async function loadSpecies() {
-            const data = await getPokemonSpecies(pokemon.name);
+            const data = await getPokemonSpecies(pokemon.species.name);
             setSpecies(data);
         }
 
         loadSpecies();
 
-    }, [pokemon.name]);
+    }, [pokemon.species.name]);
 
 
     if (!species) {
         return null;
     }
 
-    const description = species.flavor_text_entries
-    .find(entry => entry.language.name === "en")
-    ?.flavor_text
-    .replace(/\n|\f/g, " ");
+    function formatText(text) {
+        if (!text) return "";
+    
+        return text
+            .replaceAll("POKéMON", "Pokémon")
+            .replaceAll("POKEMON", "Pokémon");
+    }
+
+    const description = formatText(
+        species.flavor_text_entries
+            .find(entry => entry.language.name === "en")
+            ?.flavor_text
+            .replace(/\n|\f/g, " ")
+    );
 
     return (
         <div className="pokepage-container">
             <div className="detail"></div>
             <div className="name">
-                <h1>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</h1>
+                <h1>{pokemon.species.name.charAt(0).toUpperCase() + pokemon.species.name.slice(1)}</h1>
             </div>            
             <div className="row">
                 <div className="portrait">
-                    <img src={pokemon.sprites.other["official-artwork"].front_default} alt={pokemon.name} />
+                    <img src={pokemon.sprites.other["official-artwork"].front_default} alt={pokemon.species.name} />
                 </div>
                 <div className="bio">
                     <div className="dexN">

@@ -25,13 +25,13 @@ function PokeCard({pokemon}) {
 
     
     return (
-        <div className="card" onClick={() => navigate(`/pokemon/${pokemonData.name}`, {state: pokemonData})}>
+        <div className="card" onClick={() => navigate(`/pokemon/${pokemonData.name}`)}>
             <div className="card-img">
-                <img src={pokemonData.sprites.front_default} alt={pokemon.name} loading="lazy"/>
+                <img src={pokemonData.sprites.front_default} alt={pokemon.species?.name} loading="lazy"/>
             </div>
             <div className="card-name">
                 <h3>#{String(pokemonData.id).padStart(3, "0")}</h3>
-                <h2>{pokemonData.name.charAt(0).toUpperCase() + pokemonData.name.slice(1)}</h2>
+                <h2>{pokemonData.species.name.charAt(0).toUpperCase() + pokemonData.species.name.slice(1)}</h2>
             </div>
             <div className={"card-types"}>
                 {pokemonData.types.map(({ type }) => (

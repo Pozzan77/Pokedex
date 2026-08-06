@@ -14,9 +14,15 @@ function Home() {
   useEffect(() => {
     async function loadPokemonList() {
       const list = await getPokemonList();
-
-
-      setPokemonList(list);
+  
+      const uniqueList = list.filter(
+        (pokemon, index, self) =>
+          index === self.findIndex(
+            p => p.name === pokemon.name
+          )
+      );
+  
+      setPokemonList(uniqueList);
     }
   
     loadPokemonList();
@@ -26,9 +32,9 @@ function Home() {
     return pokemon.name.toLowerCase().includes(search.toLowerCase());
   });
 
-  const PokemonElements = filteredPokemon.map(pokemon => {
+  const PokemonElements = filteredPokemon.map((pokemon,index) => {
     return <PokeCard 
-      key={pokemon.name}
+      key={index}
       pokemon={pokemon}
     />
   })
