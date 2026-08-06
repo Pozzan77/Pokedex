@@ -1,6 +1,7 @@
 const BASE_URL = "https://pokeapi.co/api/v2"
 
 const pokemonCache = {};
+let pokemonListCache = null;
 
 export async function getPokemon(name) {
 
@@ -34,6 +35,10 @@ export async function getPokemonSpecies(name) {
 }
 
 export async function getPokemonList() {
+    if (pokemonListCache) {
+        return pokemonListCache;
+    }
+
     const response = await fetch(
       `${BASE_URL}/pokemon?limit=1025`
     );
@@ -44,5 +49,7 @@ export async function getPokemonList() {
   
     const data = await response.json();
   
-    return data.results;
+    pokemonListCache = data.results;
+
+    return pokemonListCache
   }
