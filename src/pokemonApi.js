@@ -39,6 +39,29 @@ export async function getPokemonSpecies(name) {
     return data;
 }
 
+const abilityCache = {};
+
+export async function getAbility(name) {
+    if (abilityCache[name]) {
+        return abilityCache[name];
+    }
+
+    const response = await fetch(
+        `${BASE_URL}/ability/${name}`
+    );
+
+    if (!response.ok) {
+        throw new Error("Couldn't load ability");
+    }
+
+    const data = await response.json();
+
+    abilityCache[name] = data;
+
+    return data;
+}
+
+
 let pokemonListCache = null;
 
 export async function getPokemonList() {
