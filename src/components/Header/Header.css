@@ -1,9 +1,19 @@
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+
 .header-logo {
     background-color: var(--red);
     height: 77px;
 }
 
 .nav-bar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
     display: flex;
     align-items: center;
     background-color: var(--gray);
