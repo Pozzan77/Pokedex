@@ -104,7 +104,10 @@ function Pokepage({pokemon}) {
         ? 0
         : genderRate * 12.5;
 
-
+    const totalStats = pokemon.stats.reduce(
+        (total, stat) => total + stat.base_stat,
+        0
+    );
 
 
     return (
@@ -228,8 +231,47 @@ function Pokepage({pokemon}) {
 
                     </>
                 )}
+            </div>               
             </div>
 
+            <div className="base-stats">
+                <h2>Base Stats:</h2>
+                    {pokemon.stats.map((stat) => (
+                        <div className="stat" key={stat.stat.name}>
+                                <span className="stat-name">
+                                    {stat.stat.name
+                                        .replace("special-attack", "Sp. Attack")
+                                        .replace("special-defense", "Sp. Defense")
+                                        .replace("attack", "Attack")
+                                        .replace("defense", "Defense")
+                                        .replace("speed", "Speed")
+                                        .replace("hp", "HP")
+                                    }
+                                </span>
+                                <span className="stat-value">{stat.base_stat}</span>
+                            
+                            <div className="stat-bar">
+                                <div
+                                className="stat-bar-fill"
+                                style={{ width: `${(stat.base_stat / 255) * 100}%` }}
+                                ></div>
+                            </div>
+                        </div>
+                    ))}
+
+                    <div className="stat total-stat">
+                        <span className="stat-name">Total</span>
+                        <span className="stat-value">{totalStats}</span>
+
+                        <div className="stat-bar">
+                            <div
+                                className="stat-bar-fill"
+                                style={{
+                                    width: `${(totalStats / 720) * 100}%`
+                                }}
+                            ></div>
+                        </div>
+                    </div>
             </div>
         </div>
     )

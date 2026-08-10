@@ -169,7 +169,6 @@
 }
 
 .species h3 {
-    display: flex;
     color: black;
     font-size: 1.5rem;
     margin-bottom: 30px;
@@ -190,7 +189,6 @@
 }
 
 .height h3 {
-    display: flex;
     color: black;
     font-size: 1.5rem;
     margin-bottom: 15px;
@@ -205,7 +203,6 @@
 }
 
 .weight h3 {
-    display: flex;
     color: black;
     font-size: 1.5rem;
     margin-bottom: 15px;
@@ -227,7 +224,6 @@
 }
 
 .ability h3 {
-    display: flex;
     color: black;
     font-size: 1.5rem;
     margin-bottom: 15px;
@@ -254,10 +250,17 @@
 }
 
 .back {
-    border-radius: 5px;
+    border-radius: 15px;
     width: 10%;
+    height: 5%;
     margin-bottom: 80px;
-    background-color: var(--card);
+    border: none;
+    box-shadow: 
+        0 1px 2px rgba(0, 0, 0, 0.05),
+        0 4px 12px rgba(0, 0, 0, 0.05),
+        0 16px 32px rgba(0, 0, 0, 0.05);
+    ;
+    color: var(--gray);
 }
 
 .ability-desc {
@@ -279,7 +282,6 @@
 }
 
 .gender h3 {
-    display: flex;
     color: black;
     font-size: 1.5rem;
     margin-bottom: 15px;
@@ -297,5 +299,62 @@
 }
 
 .gender-info span {
+    font-weight: bold;
+}
+
+
+.base-stats {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    margin-block: 50px;
+    width: 80%;
+    height: 450px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--gray);
+}
+
+.base-stats h2 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    margin-left: 10px;
+}
+
+.stat {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+}
+
+.stat-name {
+    width: 150px;
+}
+
+.stat-value {
+    width: 50px;
+    text-align: right;
+}
+
+.stat-bar {
+    flex: 1;
+    height: 16px;
+    margin-left: 10px;
+    background-color: var(--card);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.stat-bar-fill {
+    height: 100%;
+    background-color: #4caf50;
+    border-radius: 5px;
+}
+
+.total-stat {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 2px solid #ddd;
     font-weight: bold;
 }
