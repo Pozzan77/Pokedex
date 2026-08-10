@@ -61,6 +61,27 @@ export async function getAbility(name) {
     return data;
 }
 
+const typeCache = {};
+
+export async function getType(name) {
+    if (typeCache[name]) {
+        return typeCache[name];
+    }
+
+    const response = await fetch(
+        `${BASE_URL}/type/${name}`
+    );
+
+    if (!response.ok) {
+        throw new Error("Couldn't load type");
+    }
+
+    const data = await response.json();
+
+    typeCache[name] = data;
+
+    return data;
+}
 
 let pokemonListCache = null;
 

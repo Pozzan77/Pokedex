@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getPokemonSpecies, getAbility } from "../../pokemonApi";
+import { getPokemonSpecies, getAbility, getType } from "../../pokemonApi";
 import { cropPokemonImage } from "../../utils/cropPokemonImage";
 import "./Pokepage.css"
 import maleIcon from "../../assets/male.png";
@@ -11,6 +11,7 @@ import shinyIcon from "../../assets/shiny.png";
 function Pokepage({pokemon}) {
 
     const [species, setSpecies] = useState(null);
+    const [typeData, setTypeData] = useState([])
     const [ability, setAbility] = useState(null);
     const [isAbility,setIsAbility] = useState(false);
     const [isShiny, setIsShiny] = useState(false);
@@ -44,6 +45,18 @@ function Pokepage({pokemon}) {
             loadAbility();
         }
     }, [normalAbility]);
+
+    useEffect(() => {
+        async function loadTypes() {
+            const types = await Promise.all(
+                pokemon.types.map(({ type }) => getType(type.name))
+            );
+    
+            setTypeData(types);
+        }
+    
+        loadTypes();
+    }, [pokemon.types]);
 
     useEffect(() => {
         const image = isShiny
@@ -109,6 +122,27 @@ function Pokepage({pokemon}) {
         0
     );
 
+    function calculateTypeEffectiveness(types) {
+        const effectiveness = {};
+    
+        types.forEach((type) => {
+            type.damage_relations.double_damage_from.forEach(({ name }) => {
+                effectiveness[name] = (effectiveness[name] || 1) * 2;
+            });
+    
+            type.damage_relations.half_damage_from.forEach(({ name }) => {
+                effectiveness[name] = (effectiveness[name] || 1) * 0.5;
+            });
+    
+            type.damage_relations.no_damage_from.forEach(({ name }) => {
+                effectiveness[name] = 0;
+            });
+        });
+    
+        return effectiveness;
+    }
+    
+    const effectiveness = calculateTypeEffectiveness(typeData);
 
     return (
         <div className="pokepage-container">
@@ -273,6 +307,64 @@ function Pokepage({pokemon}) {
                         </div>
                     </div>
             </div>
+            <div>
+                <div className="effectiveness">
+                    <h2>Weaknesses :</h2>
+
+                    <div className="effectiveness-types">
+                        {Object.entries(effectiveness)
+                            .filter(([type, multiplier]) => multiplier > 1)
+                            .map(([type, multiplier]) => (
+                                <div key={type} className="effectiveness-type">
+
+                                    <span className="multiplier-type">{multiplier}x</span>
+
+                                    <span className={`type ${type}`}>
+                                        {type.charAt(0).toUpperCase() + type.slice(1)}
+                                    </span>
+
+                                </div>
+                            ))}
+                    </div>
+                    <div className="effectiveness">
+                        <h2>Resistances:</h2>
+
+                        <div className="effectiveness-types">
+                            {Object.entries(effectiveness)
+                                .filter(([type, multiplier]) => multiplier < 1 && multiplier > 0)
+                                .map(([type, multiplier]) => (
+                                    <div key={type} className="effectiveness-type">
+                                        <span className="multiplier-type">{multiplier}×</span>
+
+                                        <span className={`type ${type}`}>
+                                            {type.charAt(0).toUpperCase() + type.slice(1)}
+                                        </span>
+                                    </div>
+                                ))}
+                        </div>
+                    </div>
+                    {Object.entries(effectiveness).some(
+                        ([type, multiplier]) => multiplier === 0
+                    ) && (
+                        <div className="effectiveness">
+                            <h2>Immunities:</h2>
+
+                            <div className="effectiveness-types">
+                                {Object.entries(effectiveness)
+                                    .filter(([type, multiplier]) => multiplier === 0)
+                                    .map(([type]) => (
+                                        <div key={type} className="effectiveness-type">
+                                            <span className="multiplier-type"></span>
+                                            <span className={`type ${type}`}>
+                                                {type.charAt(0).toUpperCase() + type.slice(1)}
+                                            </span>
+                                        </div>
+                                    ))}
+                            </div>
+                        </div>
+                    )}              
+                </div>
+                </div>
         </div>
     )
 
