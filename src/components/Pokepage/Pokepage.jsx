@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getPokemonSpecies, getAbility } from "../../pokemonApi";
+import { cropPokemonImage } from "../../utils/cropPokemonImage";
 import "./Pokepage.css"
 import maleIcon from "../../assets/male.png";
 import femaleIcon from "../../assets/female.png";
@@ -11,8 +12,9 @@ function Pokepage({pokemon}) {
 
     const [species, setSpecies] = useState(null);
     const [ability, setAbility] = useState(null);
-    const [isAbility,setIsAbility] = useState(false)
-    const [isShiny, setIsShiny] = useState(false)
+    const [isAbility,setIsAbility] = useState(false);
+    const [isShiny, setIsShiny] = useState(false);
+    const [displayImage, setDisplayImage] = useState(null);
 
     const navigate = useNavigate()
 
@@ -42,6 +44,16 @@ function Pokepage({pokemon}) {
             loadAbility();
         }
     }, [normalAbility]);
+
+    useEffect(() => {
+        const image = isShiny
+            ? pokemon.sprites.other["official-artwork"].front_shiny
+            : pokemon.sprites.other["official-artwork"].front_default;
+    
+        cropPokemonImage(image)
+            .then(setDisplayImage)
+            .catch(console.error);
+    }, [pokemon, isShiny]);
     
 
 
@@ -108,8 +120,12 @@ function Pokepage({pokemon}) {
             <div className="row">
                 <div className="left-part">
                     <div className="portrait">
-                        { !isShiny ? (<img src={pokemon.sprites.other["official-artwork"].front_default} alt={pokemon.species.name} loading="lazy" />) :
-                        (<img src={pokemon.sprites.other["official-artwork"].front_shiny} alt={pokemon.species.name} loading="lazy" />)}
+                    {displayImage && (
+                        <img
+                            src={displayImage}
+                            alt={pokemon.species.name}
+                        />
+                    )}
                     </div>
                     <div className="shiny">
                         <button className="shiny-btn" onClick={() => setIsShiny(!isShiny)}>
