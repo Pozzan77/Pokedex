@@ -83,6 +83,28 @@ export async function getType(name) {
     return data;
 }
 
+const evolutionCache = {};
+
+export async function getEvolutionChain(id) {
+    if (evolutionCache[id]) {
+        return evolutionCache[id];
+    }
+
+    const response = await fetch(
+        `${BASE_URL}/evolution-chain/${id}/`
+    );
+
+    if (!response.ok) {
+        throw new Error("Couldn't load evolution chain");
+    }
+
+    const data = await response.json();
+
+    evolutionCache[id] = data;
+
+    return data;
+}
+
 let pokemonListCache = null;
 
 export async function getPokemonList() {

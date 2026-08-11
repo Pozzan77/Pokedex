@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getPokemonSpecies, getAbility, getType } from "../../pokemonApi";
+import { getPokemon, getPokemonSpecies, getAbility, getType, getEvolutionChain } from "../../pokemonApi";
 import { cropPokemonImage } from "../../utils/cropPokemonImage";
+import EvolutionPokemon from "../EvolutionPokemon/EvolutionPokemon.jsx"
 import "./Pokepage.css"
 import maleIcon from "../../assets/male.png";
 import femaleIcon from "../../assets/female.png";
@@ -14,6 +15,8 @@ function Pokepage({pokemon}) {
     const [typeData, setTypeData] = useState([])
     const [ability, setAbility] = useState(null);
     const [isAbility,setIsAbility] = useState(false);
+    const [evolutionChain, setEvolutionChain] = useState(null);
+    const [evolutions, setEvolutions] = useState(null)
     const [isShiny, setIsShiny] = useState(false);
     const [displayImage, setDisplayImage] = useState(null);
 
@@ -57,6 +60,56 @@ function Pokepage({pokemon}) {
     
         loadTypes();
     }, [pokemon.types]);
+
+    async function getEvolutionData(chain) {
+        const pokemon = await getPokemon(chain.species.name);
+    
+        const nextEvolutions = await Promise.all(
+            chain.evolves_to.map(evolution =>
+                getEvolutionData(evolution)
+            )
+        );
+    
+        return {
+            pokemon,
+            evolvesTo: nextEvolutions
+        };
+    }
+
+    useEffect(() => {
+        async function loadEvolutionChain() {
+            const species = await getPokemonSpecies(pokemon.species.name);
+    
+            const url = species.evolution_chain.url;
+    
+    
+            const evolutionId = url
+                .split("/")
+                .filter(Boolean)
+                .pop();
+    
+    
+            const evolution = await getEvolutionChain(evolutionId);
+    
+            setEvolutionChain(evolution);
+        }
+    
+        loadEvolutionChain();
+    }, [pokemon.species.name]);
+
+    useEffect(() => {
+        async function loadEvolutions() {
+            if (!evolutionChain) return;
+    
+            const data = await getEvolutionData(
+                evolutionChain.chain
+            );
+    
+            setEvolutions(data);
+        }
+    
+        loadEvolutions();
+    }, [evolutionChain]);
 
     useEffect(() => {
         const image = isShiny
@@ -364,6 +417,13 @@ function Pokepage({pokemon}) {
                         </div>
                     )}              
                 </div>
+                <div className="evolution-container">
+                    <h2>Evolutions</h2>
+                    {evolutions && (
+                        <EvolutionPokemon evolution={evolutions} />
+                    )}
+                </div>
+                
                 </div>
         </div>
     )
