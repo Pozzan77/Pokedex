@@ -1,12 +1,19 @@
 import "./Header.css"
+import shinyIcon from "../../assets/shiny.png";
+import { useNavigate } from "react-router-dom";
 
 function Header(props) {
+
+    const navigate = useNavigate()
+
     return (
         <header className="header">
             <div className="header-logo">
-                
+                <div className="logo">
+                    <img src={shinyIcon} alt="logo" onClick={() => navigate("/")}/>
+                </div>
             </div>
-            { props.showNav && (<nav className="nav-bar">
+            { props.showNav ? (<nav className="nav-bar">
                 <div className="search-bar">
                     <img src="src/assets/search.png" alt="" />
                     <input 
@@ -16,7 +23,11 @@ function Header(props) {
                     onChange={(e) => props.setSearch(e.target.value)}
                     />
                 </div>
-            </nav>)}
+            </nav>) :  <div className="detail">
+                <button className="back-page-btn" onClick={() => navigate(-1)}>
+                    Back
+                </button>
+            </div>}
         </header>
     )
 }

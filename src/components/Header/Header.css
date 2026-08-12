@@ -10,10 +10,17 @@ header {
     height: 77px;
 }
 
+.logo {
+  width: 80px;
+  margin-left: 10%;
+  z-index: 2000;
+}
+
+.logo img {
+  cursor: pointer;
+}
+
 .nav-bar {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
     display: flex;
     align-items: center;
     background-color: var(--gray);
@@ -45,3 +52,14 @@ header {
     width: 100%;
     font-size: 16px;
   }
+
+  .detail {
+    position: sticky;
+    z-index: 1000;
+    top: 0;
+    display: flex;
+    align-items: center;
+    background-color: var(--gray);
+    height: 88px;
+    margin-bottom: 30px;
+}

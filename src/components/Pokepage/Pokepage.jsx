@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { getPokemon, getPokemonSpecies, getAbility, getType, getEvolutionChain } from "../../pokemonApi";
 import { cropPokemonImage } from "../../utils/cropPokemonImage";
 import EvolutionPokemon from "../EvolutionPokemon/EvolutionPokemon.jsx"
@@ -19,8 +18,6 @@ function Pokepage({pokemon}) {
     const [evolutions, setEvolutions] = useState(null)
     const [isShiny, setIsShiny] = useState(false);
     const [displayImage, setDisplayImage] = useState(null);
-
-    const navigate = useNavigate()
 
     
     const normalAbility = pokemon.abilities.find(
@@ -209,11 +206,6 @@ function Pokepage({pokemon}) {
 
     return (
         <div className="pokepage-container">
-            <div className="detail">
-                <button className="back-page-btn" onClick={() => navigate(-1)}>
-                    Back
-                </button>
-            </div>
             <div className="name">
                 <h1>{pokemon.species.name.charAt(0).toUpperCase() + pokemon.species.name.slice(1)}</h1>
             </div>            
@@ -376,7 +368,7 @@ function Pokepage({pokemon}) {
 
                     <div className="effectiveness-types">
                         {Object.entries(effectiveness)
-                            .filter(([type, multiplier]) => multiplier > 1)
+                            .filter(([, multiplier]) => multiplier > 1)
                             .map(([type, multiplier]) => (
                                 <div key={type} className="effectiveness-type">
 
@@ -394,7 +386,7 @@ function Pokepage({pokemon}) {
 
                         <div className="effectiveness-types">
                             {Object.entries(effectiveness)
-                                .filter(([type, multiplier]) => multiplier < 1 && multiplier > 0)
+                                .filter(([, multiplier]) => multiplier < 1 && multiplier > 0)
                                 .map(([type, multiplier]) => (
                                     <div key={type} className="effectiveness-type">
                                         <span className="multiplier-type">{multiplier}×</span>
@@ -407,14 +399,14 @@ function Pokepage({pokemon}) {
                         </div>
                     </div>
                     {Object.entries(effectiveness).some(
-                        ([type, multiplier]) => multiplier === 0
+                        ([, multiplier]) => multiplier === 0
                     ) && (
                         <div className="effectiveness">
                             <h2>Immunities:</h2>
 
                             <div className="effectiveness-types">
                                 {Object.entries(effectiveness)
-                                    .filter(([type, multiplier]) => multiplier === 0)
+                                    .filter(([, multiplier]) => multiplier === 0)
                                     .map(([type]) => (
                                         <div key={type} className="effectiveness-type">
                                             <span className="multiplier-type"></span>
