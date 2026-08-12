@@ -2,7 +2,7 @@
     display: flex;
     align-items: center;
     padding-block: 20px;
-    font-size: 1.5rem;
+    font-size: 1rem;
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
 }
@@ -12,25 +12,64 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-inline: 100px;
 
 }
 
 .evolution-pokemon img {
     width: 150px;
+    cursor: pointer;
 }
 
 .evolution-branches {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 20px;
-    padding-left: 150px;
+
 }
 
-.many-evolutions {
+.evolution-method {
+    margin-right: 10px;
+    display: block;             
+    text-align: center;         
+    max-width: 120px;           
+    white-space: normal;        
+    word-break: normal;
+    overflow-wrap: normal;       
+}
+
+.evolution.many-evolutions {
     flex-direction: column;
+    gap: 40px;
 }
 
 .many-evolutions > .evolution-branches {
-    flex-direction: row;
-    padding-inline: 50px;
+    flex-direction: row !important;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+
+.many-evolutions > .evolution-branches .evolution {
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.1rem; 
+    gap: 8px;
+}
+
+.many-evolutions > .evolution-branches .evolution-pokemon {
+    padding-inline: 10px;
+}
+
+
+
+.many-evolutions > .evolution-branches .evolution-method {
+    display: block;             
+    text-align: center;         
+    max-width: 120px;           
+    white-space: normal;        
+    word-break: normal;
+    overflow-wrap: normal;    
 }

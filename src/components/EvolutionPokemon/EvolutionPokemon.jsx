@@ -1,19 +1,51 @@
 import "./EvolutionPokemon.css"
+import { useNavigate } from "react-router-dom";
+import { getEvolutionMethod } from "../../utils/EvolutionMethod";
 
 function EvolutionPokemon({ evolution }) {
-    console.log(evolution);
+    
+    const navigate = useNavigate()
+
+    const evolutionDetails = evolution.evolutionDetails?.[0];
+
+
+    const evolutionMethod = getEvolutionMethod(evolutionDetails);
+
+    console.log(
+        evolution.pokemon.name,
+        evolution.evolutionDetails?.[0]
+    );
+
     return (
-        <div className={`evolution ${
-            evolution.evolvesTo.length >= 4 ? "many-evolutions" : ""
-        }`}>
+            <div className={`evolution ${
+                evolution.evolvesTo.length >= 4 ? "many-evolutions" : ""
+            }`}>
+
+
+            {evolutionMethod &&  (
+                <span className="evolution-method">{evolutionMethod}</span>
+            )}
+
+
+
+
             <div className="evolution-pokemon">
                 <img
                     src={evolution.pokemon.sprites.other["official-artwork"].front_default}
                     alt={evolution.pokemon.name}
+                    onClick={() => {
+                        navigate(`/pokemon/${evolution.pokemon.name}`);
+                        window.scrollTo({top: 0, behavior: "smooth"});
+                    }}
                 />
 
-                <p>{evolution.pokemon.name.charAt(0).toUpperCase() + evolution.pokemon.name.slice(1)}</p>
+
+                <p>
+                    {evolution.speciesName.charAt(0).toUpperCase() +
+                    evolution.speciesName.slice(1)}
+                </p>
             </div>
+
 
             {evolution.evolvesTo.length > 0 && (
                 <div className="evolution-branches">
@@ -29,4 +61,6 @@ function EvolutionPokemon({ evolution }) {
     );
 }
 
+
 export default EvolutionPokemon;
+

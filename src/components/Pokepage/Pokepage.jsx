@@ -62,7 +62,15 @@ function Pokepage({pokemon}) {
     }, [pokemon.types]);
 
     async function getEvolutionData(chain) {
-        const pokemon = await getPokemon(chain.species.name);
+        const species = await getPokemonSpecies(chain.species.name);
+    
+        const defaultVariety = species.varieties.find(
+            variety => variety.is_default
+        );
+    
+        const pokemon = await getPokemon(
+            defaultVariety.pokemon.name
+        );
     
         const nextEvolutions = await Promise.all(
             chain.evolves_to.map(evolution =>
@@ -72,7 +80,9 @@ function Pokepage({pokemon}) {
     
         return {
             pokemon,
-            evolvesTo: nextEvolutions
+            speciesName: chain.species.name,
+            evolvesTo: nextEvolutions,
+            evolutionDetails: chain.evolution_details
         };
     }
 
