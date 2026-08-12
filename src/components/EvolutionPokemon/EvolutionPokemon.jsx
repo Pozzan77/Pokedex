@@ -8,13 +8,7 @@ function EvolutionPokemon({ evolution }) {
 
     const evolutionDetails = evolution.evolutionDetails?.[0];
 
-
     const evolutionMethod = getEvolutionMethod(evolutionDetails);
-
-    console.log(
-        evolution.pokemon.name,
-        evolution.evolutionDetails?.[0]
-    );
 
     return (
             <div className={`evolution ${

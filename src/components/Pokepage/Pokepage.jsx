@@ -10,6 +10,7 @@ import shinyIcon from "../../assets/shiny.png";
 
 function Pokepage({pokemon}) {
 
+
     const [species, setSpecies] = useState(null);
     const [typeData, setTypeData] = useState([])
     const [ability, setAbility] = useState(null);
@@ -139,7 +140,10 @@ function Pokepage({pokemon}) {
     
         return text
             .replaceAll("POKéMON", "Pokémon")
-            .replaceAll("POKEMON", "Pokémon");
+            .replaceAll("POKEMON", "Pokémon")
+            .replace(/\b[A-Z]{3,}[a-z]*\b/g, word =>
+                word.charAt(0) + word.slice(1).toLowerCase()
+            );
     }
 
     const description = formatText(

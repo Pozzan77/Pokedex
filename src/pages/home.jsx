@@ -39,8 +39,10 @@ const filteredPokemon = pokemonList.filter(pokemon => {
   const id = pokemon.url.split("/").filter(Boolean).pop();
 
   return (
-    pokemon.name.toLowerCase().includes(search.toLowerCase()) ||
-    id.includes(search)
+    Number(id) <= 1025 && (
+      pokemon.name.toLowerCase().includes(search.toLowerCase()) ||
+      id.includes(search)
+    )
   );
 });
 
