@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { getPokemon, getPokemonSpecies, getAbility, getType, getEvolutionChain } from "../../pokemonApi";
+import { useNavigate } from "react-router-dom";
 import { cropPokemonImage } from "../../utils/cropPokemonImage";
+import { getRegionalEvolutionMethod } from "../../utils/RegionalEvolution.js";
 import EvolutionPokemon from "../EvolutionPokemon/EvolutionPokemon.jsx"
 import "./Pokepage.css"
 import maleIcon from "../../assets/male.png";
@@ -9,6 +11,8 @@ import shinyIcon from "../../assets/shiny.png";
 
 
 function Pokepage({pokemon}) {
+
+    const navigate = useNavigate()
 
 
     const [species, setSpecies] = useState(null);
@@ -19,6 +23,7 @@ function Pokepage({pokemon}) {
     const [evolutions, setEvolutions] = useState(null)
     const [isShiny, setIsShiny] = useState(false);
     const [displayImage, setDisplayImage] = useState(null);
+    const [isVariationOpen, setIsVariationOpen] = useState(false);
 
     
     const normalAbility = pokemon.abilities.find(
@@ -59,21 +64,69 @@ function Pokepage({pokemon}) {
         loadTypes();
     }, [pokemon.types]);
 
-    async function getEvolutionData(chain) {
+    function getRegionalForm(pokemonName) {
+        const regionalForms = [
+            "alola",
+            "galar",
+            "hisui",
+            "paldea"
+        ];
+    
+        for (const form of regionalForms) {
+            if (pokemonName.endsWith(`-${form}`)) {
+                return form;
+            }
+        }
+    
+        return null;
+    }
+
+    async function getEvolutionData(chain, regionalForm = null) {
         const species = await getPokemonSpecies(chain.species.name);
     
-        const defaultVariety = species.varieties.find(
+        let selectedVariety = species.varieties.find(
             variety => variety.is_default
         );
     
+        if (regionalForm) {
+            const regionalVariety = species.varieties.find(
+                variety =>
+                    variationHasRegionalForm(
+                        variety.pokemon.name,
+                        regionalForm
+                    )
+            );
+    
+            if (regionalVariety) {
+                selectedVariety = regionalVariety;
+            }
+        }
+    
         const pokemon = await getPokemon(
-            defaultVariety.pokemon.name
+            selectedVariety.pokemon.name
         );
     
         const nextEvolutions = await Promise.all(
-            chain.evolves_to.map(evolution =>
-                getEvolutionData(evolution)
-            )
+            chain.evolves_to.map(async (evolution) => {
+    
+                const evolutionData = await getEvolutionData(
+                    evolution,
+                    regionalForm
+                );
+    
+                const regionalMethod = getRegionalEvolutionMethod(
+                    evolutionData.pokemon.name
+                );
+
+                console.log("EVOLUTION POKEMON:", evolutionData.pokemon.name);
+                console.log("REGIONAL METHOD:", regionalMethod);
+                
+                if (regionalMethod) {
+                    evolutionData.evolutionDetails = [regionalMethod];
+                }
+    
+                return evolutionData;
+            })
         );
     
         return {
@@ -82,6 +135,10 @@ function Pokepage({pokemon}) {
             evolvesTo: nextEvolutions,
             evolutionDetails: chain.evolution_details
         };
+    }
+
+    function variationHasRegionalForm(name, regionalForm) {
+        return name.endsWith(`-${regionalForm}`);
     }
 
     useEffect(() => {
@@ -108,16 +165,20 @@ function Pokepage({pokemon}) {
     useEffect(() => {
         async function loadEvolutions() {
             if (!evolutionChain) return;
+
+
+            const regionalForm = getRegionalForm(pokemon.name);
     
             const data = await getEvolutionData(
-                evolutionChain.chain
+                evolutionChain.chain,
+                regionalForm
             );
     
             setEvolutions(data);
         }
     
         loadEvolutions();
-    }, [evolutionChain]);
+    }, [evolutionChain, pokemon.name]);
 
     useEffect(() => {
         const image = isShiny
@@ -205,6 +266,20 @@ function Pokepage({pokemon}) {
     
         return effectiveness;
     }
+
+    const excludedVariations = [
+        "pikachu-original-cap",
+        "pikachu-hoenn-cap",
+        "pikachu-sinnoh-cap",
+        "pikachu-unova-cap",
+        "pikachu-kalos-cap",
+        "pikachu-alola-cap",
+        "pikachu-partner-cap",
+        "pikachu-starter",
+        "pikachu-world-cap"
+    ];
+
+    
     
     const effectiveness = calculateTypeEffectiveness(typeData);
 
@@ -223,19 +298,48 @@ function Pokepage({pokemon}) {
                         />
                     )}
                     </div>
+                    <div className={`variation-select ${isVariationOpen ? "open" : ""}`}>
+                        <button 
+                            className="variation-btn"
+                            onClick={() => setIsVariationOpen(!isVariationOpen)}>     
+
+                            <span>
+                                {pokemon.name}
+                            </span>
+                            
+                            <span className="arrow">
+                                {isVariationOpen ? "▲" : "▼"}
+                            </span>                       
+                        </button>
+
+                        {isVariationOpen && (
+                            <div className="variations-options">
+                                {species.varieties.filter( variation => !excludedVariations.includes(variation.pokemon.name))                                
+                                .map((variation) => (
+                                    <div className="options" key={species.variation} onClick={() => {
+                                        navigate(`/pokemon/${variation.pokemon.name}`);
+                                        setIsVariationOpen(false);
+                                    }}>
+                                        {variation.pokemon.name}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                     <div className="shiny">
                         <button className="shiny-btn" onClick={() => setIsShiny(!isShiny)}>
                             <img src={shinyIcon} alt="" />
                             <span>Shiny</span>
                         </button>
                     </div>
+  
                 </div>
                 <div className={`bio ${isAbility ? "ability-desc" : ""}`}>
                 {!isAbility ? (
                     <>
                         <div className="dexN">
                             <h1>
-                                National Nº: #{String(pokemon.id).padStart(3, "0")}
+                                National Nº: #{String(species.id).padStart(3, "0")}
                             </h1>
                         </div>
 

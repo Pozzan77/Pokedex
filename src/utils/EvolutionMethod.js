@@ -133,6 +133,12 @@ export function getEvolutionMethod(details) {
     if (details.trigger?.name === "three-defeated-bisharp") {
         methods.push("Defeat 3 Bisharp that are holding Leader's Crest");
     }
+    
+    if (details.min_critical_hits) {
+        methods.push(
+            `Make ${details.min_critical_hits} critical hits in one battle`
+        );
+    }
 
     return methods.join(" + ");
 }

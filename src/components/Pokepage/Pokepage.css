@@ -91,6 +91,61 @@
         0 4px 12px rgba(0, 0, 0, 0.05),
         0 16px 32px rgba(0, 0, 0, 0.05);
     ;
+    background-color: white;
+}
+
+.variation-select {
+    width: 400px;
+    height: 50px;
+    position: relative;
+    margin-left: 200px;
+    margin-block: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+.variation-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    width: 100%;
+    height: 100%;
+    border-radius: 30px;
+    border: none;
+    box-shadow: 
+        0 1px 2px rgba(0, 0, 0, 0.05),
+        0 4px 12px rgba(0, 0, 0, 0.05),
+        0 16px 32px rgba(0, 0, 0, 0.05);
+    ;
+    background-color: white;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.variation-select.open .variation-btn {
+    border-radius: 30px 30px 0 0 ;
+}
+
+.variations-options {
+    position: absolute;
+    width: 100%;
+    border-radius: 0 0 30px 30px;
+    background-color: white;
+    overflow: hidden;
+    font-size: 1.5rem;
+}
+
+
+.options {
+    padding: 5px;
+    margin: 15px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.options:hover {
+    background-color: var(--card);
 }
 
 .shiny-btn img {
@@ -291,7 +346,9 @@
 
 .gender-info {
     display: flex;
-    gap: 15px;
+    justify-content: center;
+    text-align: end;
+    gap: 20px;
 }
 
 .gender-info img {
@@ -301,8 +358,8 @@
 
 .gender-info span {
     font-weight: bold;
+    margin-left: 5px;
 }
-
 
 .base-stats {
     display: flex;

@@ -1,5 +1,5 @@
 import "./Header.css"
-import shinyIcon from "../../assets/shiny.png";
+import logo from "../../assets/Pokédex_logo.png";
 import { useNavigate } from "react-router-dom";
 
 function Header(props) {
@@ -10,7 +10,7 @@ function Header(props) {
         <header className="header">
             <div className="header-logo">
                 <div className="logo">
-                    <img src={shinyIcon} alt="logo" onClick={() => navigate("/")}/>
+                    <img src={logo} alt="logo" onClick={() => navigate("/")}/>
                 </div>
             </div>
             { props.showNav ? (<nav className="nav-bar">
