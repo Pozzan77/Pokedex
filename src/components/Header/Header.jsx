@@ -10,7 +10,7 @@ function Header(props) {
         <header className="header">
             <div className="header-logo">
                 <div className="logo">
-                    <img src={logo} alt="logo" onClick={() => navigate("/")}/>
+                    <img src={logo} alt="logo" onClick={() => navigate("/")} />
                 </div>
             </div>
             { props.showNav ? (<nav className="nav-bar">

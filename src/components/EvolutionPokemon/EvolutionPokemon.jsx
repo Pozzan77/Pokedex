@@ -10,6 +10,29 @@ function EvolutionPokemon({ evolution }) {
 
     const evolutionMethod = getEvolutionMethod(evolutionDetails);
 
+    function formatPokemonName(name) {
+        if (!name) return "";
+    
+        const specialNames = {
+            "farfetchd": "Farfetch'd",
+            "farfetchd-galar": "Farfetch'd Galar",
+            "sirfetchd": "Sirfetch'd",
+            "mr-mime": "Mr. Mime",
+            "mr-rime": "Mr. Rime",
+            "mime-jr": "Mime Jr.",
+            "nidoran-f": "Nidoran♀",
+            "nidoran-m": "Nidoran♂",
+        };
+    
+        if (specialNames[name]) {
+            return specialNames[name];
+        }
+    
+        return name
+            .replaceAll("-", " ")
+            .replace(/\b\w/g, letter => letter.toUpperCase());
+    }
+
     return (
             <div className={`evolution ${
                 evolution.evolvesTo.length >= 4 ? "many-evolutions" : ""
@@ -35,8 +58,8 @@ function EvolutionPokemon({ evolution }) {
 
 
                 <p>
-                    {evolution.speciesName.charAt(0).toUpperCase() +
-                    evolution.speciesName.slice(1)}
+                    {formatPokemonName(evolution.speciesName.charAt(0).toUpperCase() +
+                    evolution.speciesName.slice(1))}
                 </p>
             </div>
 

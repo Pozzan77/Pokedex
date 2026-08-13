@@ -118,8 +118,6 @@ function Pokepage({pokemon}) {
                     evolutionData.pokemon.name
                 );
 
-                console.log("EVOLUTION POKEMON:", evolutionData.pokemon.name);
-                console.log("REGIONAL METHOD:", regionalMethod);
                 
                 if (regionalMethod) {
                     evolutionData.evolutionDetails = [regionalMethod];
@@ -214,6 +212,48 @@ function Pokepage({pokemon}) {
             .replace(/\n|\f/g, " ")
     );
 
+    function formatPokemonName(name) {
+        if (!name) return "";
+    
+        const specialNames = {
+            "farfetchd": "Farfetch'd",
+            "farfetchd-galar": "Farfetch'd Galar",
+            "sirfetchd": "Sirfetch'd",
+            "mr-mime": "Mr. Mime",
+            "mr-rime": "Mr. Rime",
+            "mime-jr": "Mime Jr.",
+            "nidoran-f": "Nidoran♀",
+            "nidoran-m": "Nidoran♂",
+        };
+    
+        if (specialNames[name]) {
+            return specialNames[name];
+        }
+    
+        const parts = name.split("-");
+    
+        // Mega
+        if (parts[1] === "mega") {
+            const baseName = parts[0];
+            const variant = parts.slice(2).join(" ");
+    
+            return `Mega ${capitalize(baseName)}${
+                variant ? ` ${capitalize(variant)}` : ""
+            }`;
+        }
+    
+        // Gigantamax
+        if (parts[1] === "gmax") {
+            return `Gigantamax ${capitalize(parts[0])}`;
+        }
+    
+        return parts.map(capitalize).join(" ");
+    }
+    
+    function capitalize(word) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+    }
+
     const genus = species.genera.find(
         entry => entry.language.name === "en"
     )?.genus;
@@ -286,7 +326,7 @@ function Pokepage({pokemon}) {
     return (
         <div className="pokepage-container">
             <div className="name">
-                <h1>{pokemon.species.name.charAt(0).toUpperCase() + pokemon.species.name.slice(1)}</h1>
+                <h1>{formatPokemonName(pokemon.species.name.charAt(0).toUpperCase() + pokemon.species.name.slice(1))}</h1>
             </div>            
             <div className="row">
                 <div className="left-part">
@@ -304,7 +344,7 @@ function Pokepage({pokemon}) {
                             onClick={() => setIsVariationOpen(!isVariationOpen)}>     
 
                             <span>
-                                {pokemon.name}
+                                {formatPokemonName(pokemon.name)}
                             </span>
                             
                             <span className="arrow">
@@ -320,7 +360,7 @@ function Pokepage({pokemon}) {
                                         navigate(`/pokemon/${variation.pokemon.name}`);
                                         setIsVariationOpen(false);
                                     }}>
-                                        {variation.pokemon.name}
+                                        {formatPokemonName(variation.pokemon.name)}
                                     </div>
                                 ))}
                             </div>

@@ -23,6 +23,30 @@ function PokeCard({pokemon}) {
     if (!pokemonData) {
         return <div className="card loading">Loading...</div>
     }
+
+    function formatPokemonName(name) {
+        if (!name) return "";
+    
+        const specialNames = {
+            "farfetchd": "Farfetch'd",
+            "farfetchd-galar": "Farfetch'd Galar",
+            "sirfetchd": "Sirfetch'd",
+            "mr-mime": "Mr. Mime",
+            "mr-rime": "Mr. Rime",
+            "mime-jr": "Mime Jr.",
+            "nidoran-f": "Nidoran♀",
+            "nidoran-m": "Nidoran♂",
+            "Gmax" : "Gigantamax"
+        };
+    
+        if (specialNames[name]) {
+            return specialNames[name];
+        }
+    
+        return name
+            .replaceAll("-", " ")
+            .replace(/\b\w/g, letter => letter.toUpperCase());
+    }
     
     return (
         <div className="card" onClick={() => navigate(`/pokemon/${pokemonData.name}`)}>
@@ -31,7 +55,7 @@ function PokeCard({pokemon}) {
             </div>
             <div className="card-name">
                 <h3>#{String(pokemonData.id).padStart(3, "0")}</h3>
-                <h2>{pokemonData.species.name.charAt(0).toUpperCase() + pokemonData.species.name.slice(1)}</h2>
+                <h2>{formatPokemonName(pokemonData.species.name.charAt(0).toUpperCase() + pokemonData.species.name.slice(1))}</h2>
             </div>
             <div className={"card-types"}>
                 {pokemonData.types.map(({ type }) => (
