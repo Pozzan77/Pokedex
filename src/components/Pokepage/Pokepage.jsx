@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
-import { getPokemon, getPokemonSpecies, getAbility, getType, getEvolutionChain } from "../../pokemonApi";
+import { getPokemon, getPokemonSpecies, getAbility, getType, getEvolutionChain, getMove } from "../../pokemonApi";
 import { useNavigate } from "react-router-dom";
 import { cropPokemonImage } from "../../utils/cropPokemonImage";
 import { getRegionalEvolutionMethod } from "../../utils/RegionalEvolution.js";
+import { getVersionGroupsFromGeneration } from "../../utils/GenerationVersion.js";
 import EvolutionPokemon from "../EvolutionPokemon/EvolutionPokemon.jsx"
+import Move from "../../components/Move/Move.jsx";
 import "./Pokepage.css"
 import maleIcon from "../../assets/male.png";
 import femaleIcon from "../../assets/female.png";
@@ -16,7 +18,7 @@ function Pokepage({pokemon}) {
 
 
     const [species, setSpecies] = useState(null);
-    const [typeData, setTypeData] = useState([])
+    const [typeData, setTypeData] = useState([]);
     const [ability, setAbility] = useState(null);
     const [isAbility,setIsAbility] = useState(false);
     const [evolutionChain, setEvolutionChain] = useState(null);
@@ -24,6 +26,9 @@ function Pokepage({pokemon}) {
     const [isShiny, setIsShiny] = useState(false);
     const [displayImage, setDisplayImage] = useState(null);
     const [isVariationOpen, setIsVariationOpen] = useState(false);
+    const [selectedGeneration, setSelectedGeneration] = useState(1);
+    const [moveData, setMoveData] = useState([]);
+    const [eggPokemon, setEggPokemon] = useState(null);
 
     
     const normalAbility = pokemon.abilities.find(
@@ -179,6 +184,20 @@ function Pokepage({pokemon}) {
     }, [evolutionChain, pokemon.name]);
 
     useEffect(() => {
+        async function loadEggPokemon() {
+            if (!evolutionChain) return;
+    
+            const firstPokemonName = evolutionChain.chain.species.name;
+    
+            const data = await getPokemon(firstPokemonName);
+    
+            setEggPokemon(data);
+        }
+    
+        loadEggPokemon();
+    }, [evolutionChain]);
+
+    useEffect(() => {
         const image = isShiny
             ? pokemon.sprites.other["official-artwork"].front_shiny
             : pokemon.sprites.other["official-artwork"].front_default;
@@ -187,7 +206,103 @@ function Pokepage({pokemon}) {
             .then(setDisplayImage)
             .catch(console.error);
     }, [pokemon, isShiny]);
+
+    const generations = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+    const versionGroups =
+    getVersionGroupsFromGeneration(selectedGeneration);
+
+    const generationMoves = pokemon.moves.filter((move) =>
+        move.version_group_details.some((detail) =>
+            versionGroups.includes(detail.version_group.name)
+        )
+    );
     
+    const eggGenerationMoves = eggPokemon
+        ? eggPokemon.moves.filter((move) =>
+            move.version_group_details.some((detail) =>
+                versionGroups.includes(detail.version_group.name)
+            )
+        )
+        : [];
+
+        useEffect(() => {
+
+            async function loadMoveData() {
+        
+                const currentMoves = await Promise.all(
+                    generationMoves.map(async (move) => {
+        
+                        const data = await getMove(move.move.url);
+        
+                        const detail = move.version_group_details.find(
+                            (detail) =>
+                                versionGroups.includes(
+                                    detail.version_group.name
+                                )
+                        );
+        
+                        return {
+                            name: move.move.name,
+                            type: data.type.name,
+                            power: data.power,
+                            category: data.damage_class.name,
+                            accuracy: data.accuracy,
+                            learnMethod: detail?.move_learn_method.name,
+                            level: detail?.level_learned_at ?? null,
+                            versionGroup: detail?.version_group.name
+                        };
+                    })
+                );
+        
+        
+                const eggMoves = await Promise.all(
+                    eggGenerationMoves
+                        .filter((move) =>
+                            move.version_group_details.some(
+                                (detail) =>
+                                    versionGroups.includes(
+                                        detail.version_group.name
+                                    ) &&
+                                    detail.move_learn_method.name === "egg"
+                            )
+                        )
+                        .map(async (move) => {
+        
+                            const data = await getMove(move.move.url);
+        
+                            return {
+                                name: move.move.name,
+                                type: data.type.name,
+                                power: data.power,
+                                category: data.damage_class.name,
+                                accuracy: data.accuracy,
+                                learnMethod: "egg"
+                            };
+                        })
+                );
+        
+        
+                setMoveData([
+                    ...currentMoves,
+                    ...eggMoves
+                ]);
+        
+            }
+        
+            loadMoveData();
+        
+        }, [pokemon, eggPokemon, selectedGeneration]);
+
+    const levelUpMoves = moveData
+    .filter((move) => move.learnMethod === "level-up")
+    .sort((a, b) => a.level - b.level);
+
+    const tmMoves = moveData
+        .filter((move) => move.learnMethod === "machine");
+
+    const eggMoves = moveData
+        .filter((move) => move.learnMethod === "egg");
 
 
     if (!species) {
@@ -214,25 +329,10 @@ function Pokepage({pokemon}) {
 
     function formatPokemonName(name) {
         if (!name) return "";
-    
-        const specialNames = {
-            "farfetchd": "Farfetch'd",
-            "farfetchd-galar": "Farfetch'd Galar",
-            "sirfetchd": "Sirfetch'd",
-            "mr-mime": "Mr. Mime",
-            "mr-rime": "Mr. Rime",
-            "mime-jr": "Mime Jr.",
-            "nidoran-f": "Nidoran♀",
-            "nidoran-m": "Nidoran♂",
-        };
-    
-        if (specialNames[name]) {
-            return specialNames[name];
-        }
+
     
         const parts = name.split("-");
     
-        // Mega
         if (parts[1] === "mega") {
             const baseName = parts[0];
             const variant = parts.slice(2).join(" ");
@@ -242,7 +342,6 @@ function Pokepage({pokemon}) {
             }`;
         }
     
-        // Gigantamax
         if (parts[1] === "gmax") {
             return `Gigantamax ${capitalize(parts[0])}`;
         }
@@ -320,8 +419,11 @@ function Pokepage({pokemon}) {
     ];
 
     
-    
     const effectiveness = calculateTypeEffectiveness(typeData);
+
+
+
+
 
     return (
         <div className="pokepage-container">
@@ -573,7 +675,32 @@ function Pokepage({pokemon}) {
                         <EvolutionPokemon evolution={evolutions} />
                     )}
                 </div>
-                
+
+                <div className="moves-container">
+
+                    <h3>Generations:</h3>
+
+                    <div className="moves-genegations">
+                        {generations.map((generation) => (
+                            <button
+                                key={generation}
+                                className={selectedGeneration === generation ? "active" : ""}
+                                onClick={() => setSelectedGeneration(generation)}
+                            >
+                                {generation}
+                            </button>
+                        ))}
+                    </div>
+                    
+                    
+                    <h2>Moves:</h2>
+                    <Move
+                        levelUpMoves={levelUpMoves}
+                        tmMoves={tmMoves}
+                        eggMoves={eggMoves}
+                    />
+                </div>
+                    
                 </div>
         </div>
     )

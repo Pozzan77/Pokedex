@@ -105,6 +105,16 @@ export async function getEvolutionChain(id) {
     return data;
 }
 
+export async function getMove(url) {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+        throw new Error("Failed to fetch move");
+    }
+
+    return response.json();
+}
+
 let pokemonListCache = null;
 
 export async function getPokemonList() {

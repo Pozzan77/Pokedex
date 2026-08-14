@@ -1,0 +1,87 @@
+.moves {
+    display: grid;
+    text-align: center;
+    width: 80%;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    grid-template-rows: auto auto;
+    margin-block: 30px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.move-title {
+    text-align: left;
+    margin-left: 10%;
+}
+
+.level-up {
+    margin-top: 5%;
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.egg {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.machine {
+    grid-column: 2;
+    grid-row: 1 / 3;
+}
+
+.move-name {
+    text-align: left;
+    margin-left: 10%;
+}
+
+.move-type {
+    color: white;
+    font-size: 0.9rem;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.move-table {
+    width: 100%;
+}
+
+.move-header,
+.move-row {
+    display: grid;
+    align-items: center;
+}
+
+.move-header {
+    font-weight: bold;
+    border-bottom: 2px solid black;
+}
+
+.move-row {
+    border-bottom: 1px solid #ccc;
+    min-height: 50px;
+}
+
+
+/* Level Up and Machine */
+
+.move-table.has-extra .move-header,
+.move-table.has-extra .move-row {
+    grid-template-columns: 2fr 100px 80px 120px 100px 80px;
+}
+
+
+/* Egg */
+
+.move-table:not(.has-extra) .move-header,
+.move-table:not(.has-extra) .move-row {
+    grid-template-columns: 2fr 100px 80px 120px 100px;
+}
+
+.move-row span:last-child,
+.move-header span:last-child {
+    text-align: center;
+}

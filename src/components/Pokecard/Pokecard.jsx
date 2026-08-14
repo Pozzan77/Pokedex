@@ -27,22 +27,6 @@ function PokeCard({pokemon}) {
     function formatPokemonName(name) {
         if (!name) return "";
     
-        const specialNames = {
-            "farfetchd": "Farfetch'd",
-            "farfetchd-galar": "Farfetch'd Galar",
-            "sirfetchd": "Sirfetch'd",
-            "mr-mime": "Mr. Mime",
-            "mr-rime": "Mr. Rime",
-            "mime-jr": "Mime Jr.",
-            "nidoran-f": "Nidoran♀",
-            "nidoran-m": "Nidoran♂",
-            "Gmax" : "Gigantamax"
-        };
-    
-        if (specialNames[name]) {
-            return specialNames[name];
-        }
-    
         return name
             .replaceAll("-", " ")
             .replace(/\b\w/g, letter => letter.toUpperCase());
