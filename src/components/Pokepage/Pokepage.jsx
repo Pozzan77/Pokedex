@@ -206,11 +206,26 @@ function Pokepage({pokemon}) {
             .then(setDisplayImage)
             .catch(console.error);
     }, [pokemon, isShiny]);
+    
 
-    const generations = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    const generations = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+    const availableGenerations = generations.filter((generation) => {
+        const versionGroups = getVersionGroupsFromGeneration(generation);
+
+        return pokemon.moves.some((move) =>
+            move.version_group_details.some((detail) =>
+                versionGroups.includes(detail.version_group.name)
+            )
+        );
+    });
+
+    const currentGeneration = availableGenerations.includes(selectedGeneration)
+    ? selectedGeneration
+    : availableGenerations[0];
 
     const versionGroups =
-    getVersionGroupsFromGeneration(selectedGeneration);
+    getVersionGroupsFromGeneration(currentGeneration);
 
     const generationMoves = pokemon.moves.filter((move) =>
         move.version_group_details.some((detail) =>
@@ -225,81 +240,131 @@ function Pokepage({pokemon}) {
             )
         )
         : [];
+        
 
-        useEffect(() => {
+    useEffect(() => {
 
-            async function loadMoveData() {
-        
-                const currentMoves = await Promise.all(
-                    generationMoves.map(async (move) => {
-        
-                        const data = await getMove(move.move.url);
-        
-                        const detail = move.version_group_details.find(
+        async function loadMoveData() {
+            
+    
+            const currentMoves = await Promise.all(
+                generationMoves.map(async (move) => {
+    
+                    const data = await getMove(move.move.url);
+    
+                    const detail = move.version_group_details.find(
+                        (detail) =>
+                            versionGroups.includes(
+                                detail.version_group.name
+                            )
+                    );
+
+                    let machine = null;
+
+                    if (detail?.move_learn_method.name === "machine") {
+    
+                        const machineDetail = data.machines.find(
+                            (machine) =>
+                                versionGroups.includes(
+                                    machine.version_group.name
+                                )
+                        );
+    
+                        if (machineDetail) {
+    
+                            const machineResponse = await fetch(
+                                machineDetail.machine.url
+                            );
+    
+                            const machineData =
+                                await machineResponse.json();
+    
+                            machine =
+                                machineData.item.name.toUpperCase();
+                        }
+                    }
+
+    
+                    return {
+                        name: move.move.name,
+                        type: data.type.name,
+                        power: data.power,
+                        category: data.damage_class.name,
+                        accuracy: data.accuracy,
+                        learnMethod: detail?.move_learn_method.name,
+                        level: detail?.level_learned_at ?? null,
+                        versionGroup: detail?.version_group.name,
+                        machine
+                    };
+                })
+            );
+    
+    
+            const eggMoves = await Promise.all(
+                eggGenerationMoves
+                    .filter((move) =>
+                        move.version_group_details.some(
                             (detail) =>
                                 versionGroups.includes(
                                     detail.version_group.name
-                                )
-                        );
-        
+                                ) &&
+                                detail.move_learn_method.name === "egg"
+                        )
+                    )
+                    .map(async (move) => {
+    
+                        const data = await getMove(move.move.url);
+    
                         return {
                             name: move.move.name,
                             type: data.type.name,
                             power: data.power,
                             category: data.damage_class.name,
                             accuracy: data.accuracy,
-                            learnMethod: detail?.move_learn_method.name,
-                            level: detail?.level_learned_at ?? null,
-                            versionGroup: detail?.version_group.name
+                            learnMethod: "egg"
                         };
                     })
-                );
-        
-        
-                const eggMoves = await Promise.all(
-                    eggGenerationMoves
-                        .filter((move) =>
-                            move.version_group_details.some(
-                                (detail) =>
-                                    versionGroups.includes(
-                                        detail.version_group.name
-                                    ) &&
-                                    detail.move_learn_method.name === "egg"
-                            )
-                        )
-                        .map(async (move) => {
-        
-                            const data = await getMove(move.move.url);
-        
-                            return {
-                                name: move.move.name,
-                                type: data.type.name,
-                                power: data.power,
-                                category: data.damage_class.name,
-                                accuracy: data.accuracy,
-                                learnMethod: "egg"
-                            };
-                        })
-                );
-        
-        
-                setMoveData([
-                    ...currentMoves,
-                    ...eggMoves
-                ]);
-        
-            }
-        
-            loadMoveData();
-        
-        }, [pokemon, eggPokemon, selectedGeneration]);
+            );
+    
+    
+            setMoveData([
+                ...currentMoves,
+                ...eggMoves
+            ]);
+    
+        }
+    
+        loadMoveData();
+    
+    }, [pokemon, eggPokemon, currentGeneration]);
+    
+
+    function sortMachineMoves(a, b) {
+
+        const getMachineOrder = (machine) => {
+    
+            const type = machine.slice(0, 2);
+            const number = parseInt(machine.slice(2), 10);
+    
+            const typeOrder = {
+                HM: 0,
+                TM: 1,
+                TR: 2
+            };
+    
+            return typeOrder[type] * 1000 + number;
+        };
+    
+        return getMachineOrder(a.machine) - getMachineOrder(b.machine);
+    }
 
     const levelUpMoves = moveData
     .filter((move) => move.learnMethod === "level-up")
     .sort((a, b) => a.level - b.level);
 
     const tmMoves = moveData
-        .filter((move) => move.learnMethod === "machine");
+        .filter((move) => move.learnMethod === "machine")
+        .sort(sortMachineMoves)
 
     const eggMoves = moveData
         .filter((move) => move.learnMethod === "egg");
@@ -681,10 +746,10 @@ function Pokepage({pokemon}) {
                     <h3>Generations:</h3>
 
                     <div className="moves-genegations">
-                        {generations.map((generation) => (
+                        {availableGenerations.map((generation) => (
                             <button
                                 key={generation}
-                                className={selectedGeneration === generation ? "active" : ""}
+                                className={currentGeneration === generation ? "active" : ""}
                                 onClick={() => setSelectedGeneration(generation)}
                             >
                                 {generation}

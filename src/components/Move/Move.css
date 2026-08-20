@@ -4,18 +4,18 @@
     width: 80%;
     grid-template-columns: 1fr 1fr;
     gap: 50px;
-    grid-template-rows: auto auto;
+    grid-template-rows: auto 2fr;
     margin-block: 30px;
     font-family: Arial, Helvetica, sans-serif;
 }
 
 .move-title {
     text-align: left;
-    margin-left: 10%;
+    margin-left: 2%;
 }
 
+
 .level-up {
-    margin-top: 5%;
     grid-column: 1;
     grid-row: 1;
 }
@@ -47,6 +47,8 @@
 
 .move-table {
     width: 100%;
+    border: 2px solid var(--gray);
+
 }
 
 .move-header,
@@ -57,7 +59,8 @@
 
 .move-header {
     font-weight: bold;
-    border-bottom: 2px solid black;
+    border-bottom: 2px solid var(--gray);
+    padding-block: 5px;
 }
 
 .move-row {
@@ -66,15 +69,11 @@
 }
 
 
-/* Level Up and Machine */
-
 .move-table.has-extra .move-header,
 .move-table.has-extra .move-row {
     grid-template-columns: 2fr 100px 80px 120px 100px 80px;
 }
 
-
-/* Egg */
 
 .move-table:not(.has-extra) .move-header,
 .move-table:not(.has-extra) .move-row {

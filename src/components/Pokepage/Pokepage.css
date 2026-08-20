@@ -501,6 +501,10 @@
 .moves-genegations {
     display: flex;
     gap: 30px;
+    border: 1px solid #ccc;
+    padding-inline: 200px;
+    padding-block: 5px;
+    border-radius: 10px;
 }
 
 .moves-genegations button {
