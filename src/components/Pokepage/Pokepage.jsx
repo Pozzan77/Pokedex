@@ -742,10 +742,11 @@ function Pokepage({pokemon}) {
                 </div>
 
                 <div className="moves-container">
-
-                    <h3>Generations:</h3>
-
+                    
+                    
+                    <h2>Moves:</h2>
                     <div className="moves-genegations">
+                        <h3>Generations:</h3>
                         {availableGenerations.map((generation) => (
                             <button
                                 key={generation}
@@ -757,8 +758,6 @@ function Pokepage({pokemon}) {
                         ))}
                     </div>
                     
-                    
-                    <h2>Moves:</h2>
                     <Move
                         levelUpMoves={levelUpMoves}
                         tmMoves={tmMoves}
