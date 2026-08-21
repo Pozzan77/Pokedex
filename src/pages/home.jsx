@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getPokemonList } from "../pokemonApi.js";
+import { getPokemonList, getType } from "../pokemonApi.js";
 import "../App.css";
 import Header from "../components/Header/Header.jsx";
 import Footer from "../components/Footer/Footer.jsx";
@@ -14,6 +14,31 @@ function Home() {
     return saved ? Number(saved) : 30;
   });
   const [search, setSearch] = useState("");
+  const [showFilter, setShowFilter] = useState(false)
+  const [filterType, setFilterType] = useState("")
+  const [typePokemon, setTypePokemon] = useState([]);
+  const [filterGeneration, setFilterGeneration] = useState("")
+
+  const types = [
+    "normal",
+    "fire",
+    "water",
+    "electric",
+    "grass",
+    "ice",
+    "fighting",
+    "poison",
+    "ground",
+    "flying",
+    "psychic",
+    "bug",
+    "rock",
+    "ghost",
+    "dragon",
+    "dark",
+    "steel",
+    "fairy"
+  ];
 
   useEffect(() => {
 
@@ -27,24 +52,60 @@ function Home() {
 
 }, []);
 
-useEffect(() => {
-  sessionStorage.setItem(
-    "visibleCount",
-    visibleCount
-  );
-}, [visibleCount]);
+  useEffect(() => {
+    sessionStorage.setItem(
+      "visibleCount",
+      visibleCount
+    );
+  }, [visibleCount]);
 
-const filteredPokemon = pokemonList.filter(pokemon => {
+  useEffect(() => {
+    async function loadType() {
+      if (!filterType) {
+        setTypePokemon([]);
+        return;
+      }
+  
+      const data = await getType(filterType);
+  
+      setTypePokemon(data.pokemon.map(pokemon => pokemon.pokemon.name));
+    }
+  
+    loadType();
+  }, [filterType]);
 
-  const id = pokemon.url.split("/").filter(Boolean).pop();
+  const generations = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-  return (
-    Number(id) <= 1025 && (
-      pokemon.name.toLowerCase().includes(search.toLowerCase()) ||
-      id.includes(search)
-    )
-  );
-});
+  const generationRanges = {
+    1: [1, 151],
+    2: [152, 251],
+    3: [252, 386],
+    4: [387, 493],
+    5: [494, 649],
+    6: [650, 721],
+    7: [722, 809],
+    8: [810, 905],
+    9: [906, 1025]
+  };
+
+  const filteredPokemon = pokemonList.filter(pokemon => {
+
+    const id = pokemon.url.split("/").filter(Boolean).pop();
+
+    const seachMatch = pokemon.name.toLowerCase().includes(search.toLowerCase()) ||
+    id.includes(search)
+
+    const typeMatch = !filterType || typePokemon.includes(pokemon.name)
+
+    const generationMatch = !filterGeneration ||   (
+      Number(id) >= generationRanges[filterGeneration][0] &&
+      Number(id) <= generationRanges[filterGeneration][1]
+    );
+
+    return (
+      Number(id) <= 1025 && seachMatch && typeMatch && generationMatch
+    );
+  });
 
   const PokemonElements = filteredPokemon.slice(0, visibleCount).map((pokemon,index) => {
     return <PokeCard 
@@ -59,6 +120,14 @@ const filteredPokemon = pokemonList.filter(pokemon => {
       <Header 
         search={search}
         setSearch={setSearch}
+        showFilter={showFilter}
+        setShowFilter={setShowFilter}
+        types={types}
+        filterType={filterType}
+        setFilterType={setFilterType}
+        generations={generations}
+        filterGeneration={filterGeneration}
+        setFilterGeneration={setFilterGeneration}
         showNav={true}
       />
       <main>

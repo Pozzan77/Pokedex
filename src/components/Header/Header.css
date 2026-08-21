@@ -20,46 +20,269 @@ header {
   cursor: pointer;
 }
 
+.detail {
+  position: sticky;
+  z-index: 1000;
+  top: 0;
+  display: flex;
+  align-items: center;
+  background-color: var(--gray);
+  height: 88px;
+  margin-bottom: 30px;
+}
+
 .nav-bar {
-    display: flex;
-    align-items: center;
-    background-color: var(--gray);
-    height: 88px;
-    margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  background-color: var(--gray);
+  height: 88px;
+  gap: 50%;
 }
 
 .search-bar {
-    display: flex;
-    align-items: center;
-    width: 30%;
-    padding: 10px 16px;
-    margin: 100px;
-    border: 2px solid #ccc;
-    border-radius: 999px;
-    background: white;
-  }
-  
-  .search-bar img {
-    width: 20px;
-    height: 20px;
-    margin-right: 8px;
-  }
-  
-  .search-bar input {
-    flex: 1;
-    border: none;
-    outline: none;
-    width: 100%;
-    font-size: 16px;
-  }
+  display: flex;
+  align-items: center;
+  width: 30%;
+  padding: 10px 16px;
+  margin: 100px;
+  border: 2px solid #ccc;
+  border-radius: 999px;
+  background: white;
+}
 
-  .detail {
-    position: sticky;
-    z-index: 1000;
-    top: 0;
+.search-bar img {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.search-bar input {
+  flex: 1;
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 16px;
+}
+
+.filter-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 15px;
+  background-color: white;
+  border: none;
+  box-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 4px 12px rgba(0, 0, 0, 0.05),
+    0 16px 32px rgba(0, 0, 0, 0.05);
+;
+}
+
+.filter-btn img {
+  width: 100%;
+  height: 80%;
+}
+
+.filter-menu {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding-left: 5%;
+  background-color: var(--gray);
+  border-radius: 0 0 50px 50px;
+  height: auto;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--card);
+}
+
+
+.filter-back {
+  display: flex;
+  justify-self: center;
+  justify-content: center;
+  background-color: var(--gray);
+  width: 70%;
+  height: 30px;
+  border-radius: 0 0 20px 20px;
+}
+
+.filter-back button {
+  border: none;
+  color: var(--card);
+  background: none;
+  font-size: 1.5rem;
+  width: 100%;
+}
+
+
+.type-filter {
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;  
+  align-items: center;
+}
+
+.type-filter h3{
+  text-align: center;
+  padding-left: 40px;
+}
+
+.type-list {
+  list-style-type: none;
+  column-count: 3;
+}
+
+.filter-type {
+  display: flex;
+  margin-bottom: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.filter-type button {
+  text-align: center;
+  color: white;
+  font-size: 1rem;
+  width: 100px;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 15px;
+  border: none;
+  opacity: 0.5;
+}
+
+.filter-type button:hover {
+  transform: scale(1.05);
+}
+
+.generation-filter {
     display: flex;
+    flex-direction: column;
+
     align-items: center;
-    background-color: var(--gray);
-    height: 88px;
-    margin-bottom: 30px;
+    gap: 30%;
+}
+
+.generations {
+  grid-column: 2;
+  display: flex;
+  justify-self: center;
+  justify-content: center;
+  align-self: center;
+  align-items: center;
+  gap: 15px;
+  border-radius: 15px;
+  background-color: var(--card);
+  width: 90%;
+  height: 20%;
+  border: 2px solid;
+}
+
+.generations button {
+  border: none;
+  background: none;
+  color: var(--gray);
+  font-size: 1.5rem;
+}
+
+.generation-filter button.active {
+  color: var(--red);
+}
+
+.generations button:hover {
+  color: var(--red);
+}
+
+.gen.active {
+  color: var(--red);
+  font-weight: bold;
+}
+
+.close-filter {
+  border: none;
+  background-color: var(--red);
+  color: white;
+  border-radius: 15px;
+  width: 30%;
+  padding: 10px;
+  margin-top: 20px;
+  margin-bottom: 10%;
+}
+
+.type.normal {
+  background-color: #aab09f;
+}
+
+.type.fire {
+  background-color: #ea7a3c;
+}
+
+.type.water {
+  background-color: #539ae2;
+}
+
+.type.electric {
+  background-color: #e5c531;
+}
+
+.type.grass {
+  background-color: #71c558;
+}
+
+.type.ice {
+  background-color: #70cbd4;
+}
+
+.type.fighting {
+  background-color: #cb5f48;
+}
+
+.type.poison {
+  background-color: #b468b7;
+}
+
+.type.ground {
+  background-color: #cc9f4f;
+}
+
+.type.flying {
+  background-color: #7da6de;
+}
+
+.type.psychic {
+  background-color: #e5709b;
+}
+
+.type.bug {
+  background-color: #94bc4a;
+}
+
+.type.rock {
+  background-color: #b2a061;
+}
+
+.type.ghost {
+  background-color: #846ab6;
+}
+
+.type.dragon {
+  background-color: #6a7baf;
+}
+
+.type.dark {
+  background-color: #736c75;
+}
+
+.type.steel {
+  background-color: #89a1b0;
+}
+
+.type.fairy {
+  background-color: #e397d1;
+}
+
+.type.activate {
+  opacity: 1;
 }
