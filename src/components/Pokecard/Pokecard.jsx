@@ -7,6 +7,7 @@ import "./Pokecard.css"
 
 function PokeCard({pokemon}) {
 
+
     const [pokemonData,setPokemonData] = useState(null)
 
     const navigate = useNavigate()
@@ -28,18 +29,52 @@ function PokeCard({pokemon}) {
         if (!name) return "";
     
         return name
+            .replace("-female-mega", "-mega")
+            .replace("-male-mega", "-mega")
+            .replace("-curly-mega", "-mega")
+            .replace("-amped-gmax", "-gmax")
             .replaceAll("-", " ")
+            .replace(/\bgmax\b/i, "Gigantamax")
             .replace(/\b\w/g, letter => letter.toUpperCase());
+    }
+
+    const speciesId = pokemonData.species.url
+    .split("/")
+    .filter(Boolean)
+    .pop();
+
+    function getDisplayName(pokemonData) {
+        const name = pokemonData.name;
+    
+        if (
+            name.includes("-mega") ||
+            name.includes("-gmax") ||
+            name.endsWith("-alola") ||
+            name.endsWith("-galar") ||
+            name.endsWith("-hisui") ||
+            name.endsWith("-paldea")
+        ) {
+            return formatPokemonName(name);
+        }
+    
+        return formatPokemonName(pokemonData.species.name);
     }
     
     return (
         <div className="card" onClick={() => navigate(`/pokemon/${pokemonData.name}`)}>
             <div className="card-img">
-                <img src={pokemonData.sprites.front_default} alt={pokemon.species?.name} loading="lazy"/>
+            <img
+                src={
+                    pokemonData.sprites.front_default ||
+                    pokemonData.sprites.other.home.front_default
+                }
+                alt={pokemon.species?.name}
+                loading="lazy"
+            />
             </div>
             <div className="card-name">
-                <h3>#{String(pokemonData.id).padStart(3, "0")}</h3>
-                <h2>{formatPokemonName(pokemonData.species.name.charAt(0).toUpperCase() + pokemonData.species.name.slice(1))}</h2>
+                <h3>#{String(speciesId).padStart(3, "0")}</h3>
+                <h2>{getDisplayName(pokemonData)}</h2>
             </div>
             <div className={"card-types"}>
                 {pokemonData.types.map(({ type }) => (

@@ -96,7 +96,7 @@
 
 .variation-select {
     width: 400px;
-    height: 50px;
+    height: auto;
     position: relative;
     margin-left: 200px;
     margin-block: 20px;

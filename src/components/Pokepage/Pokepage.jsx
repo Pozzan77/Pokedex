@@ -16,7 +16,6 @@ function Pokepage({pokemon}) {
 
     const navigate = useNavigate()
 
-
     const [species, setSpecies] = useState(null);
     const [typeData, setTypeData] = useState([]);
     const [ability, setAbility] = useState(null);
@@ -34,8 +33,6 @@ function Pokepage({pokemon}) {
     const normalAbility = pokemon.abilities.find(
         ({ is_hidden }) => !is_hidden
     );
-    
-    
     useEffect(() => {
         async function loadSpecies() {
             const data = await getPokemonSpecies(pokemon.species.name);
@@ -198,9 +195,12 @@ function Pokepage({pokemon}) {
     }, [evolutionChain]);
 
     useEffect(() => {
+        const artwork = pokemon.sprites.other["official-artwork"];
+        const home = pokemon.sprites.other.home;
+    
         const image = isShiny
-            ? pokemon.sprites.other["official-artwork"].front_shiny
-            : pokemon.sprites.other["official-artwork"].front_default;
+            ? artwork.front_shiny || home.front_shiny || pokemon.sprites.front_shiny
+            : artwork.front_default || home.front_default || pokemon.sprites.front_default;
     
         cropPokemonImage(image)
             .then(setDisplayImage)
@@ -485,9 +485,6 @@ function Pokepage({pokemon}) {
 
     
     const effectiveness = calculateTypeEffectiveness(typeData);
-
-
-
 
 
     return (

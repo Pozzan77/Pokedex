@@ -41,14 +41,14 @@ function Header(props) {
             { props.showFilter && (
             <div>
                 <div className="filter-menu">
-                    <h2>Filters</h2>
+                    <h2 className="filter-title">Filters</h2>
                         <div className="type-filter">
                             <h3>Type</h3>
                             <ul className="type-list">
                                 {props.types.map(type => (
                                     <li className="filter-type">
                                         <button
-                                        className={`type ${type} ${type === props.filterType ? "activate" : ""}`}
+                                        className={`type ${type} ${type === props.filterType ? "active" : ""}`}
                                         onClick={() => props.setFilterType(type)}
                                         >
                                             {type.charAt(0).toUpperCase() + type.slice(1)}
@@ -56,23 +56,39 @@ function Header(props) {
                                     </li>
                                 ))}
                             </ul>
-                            <button className="close-filter type-col" onClick={() => props.setFilterType("")}>Remove Filter</button>
+                            <button className="close-filter close-type" onClick={() => props.setFilterType("")}>Remove Filter</button>
                         </div>
-
-                        <div className="generation-filter">
-                            <h3>Generation</h3>
-                            <div className="generations">
-                                {props.generations.map((generation) => (
-                                    <button
-                                        key={generation}
-                                        onClick={() => props.setFilterGeneration(generation)}
-                                        className={`gen ${generation === props.filterGeneration ? "active" : ""}`}
-                                    >
-                                        {generation}
-                                    </button>
-                                ))}
+                        <div>
+                            <div className="generation-filter">
+                                <h3>Generation</h3>
+                                <div className="generations">
+                                    {props.generations.map((generation) => (
+                                        <button
+                                            key={generation}
+                                            onClick={() => props.setFilterGeneration(generation)}
+                                            className={`gen ${generation === props.filterGeneration ? "active" : ""}`}
+                                        >
+                                            {generation}
+                                        </button>
+                                    ))}
+                                </div>
+                                <button className="close-filter" onClick={() => props.setFilterGeneration("")}>Remove Filter</button>
                             </div>
-                            <button className="close-filter gen-col" onClick={() => props.setFilterGeneration("")}>Remove Filter</button>
+                            <div className="variation-filter">
+                                <h3>Variations</h3>
+                                <div className="variations">
+                                    {props.variations.map(variation => (
+                                        <button
+                                            key={variation}
+                                            className={`var ${variation ===props.filterVariation ? "active" : ""}`}
+                                            onClick={() => props.setFilterVariation(variation)}
+                                        >
+                                            {variation.charAt(0).toUpperCase() + variation.slice(1)}
+                                        </button>
+                                    ))}
+                                </div>
+                                <button className="close-filter" onClick={() => props.setFilterVariation("")}>Remove Filter</button>
+                            </div>
                         </div>
                     </div>
                     <div className="filter-back"> 
