@@ -33,6 +33,7 @@ function Pokepage({pokemon}) {
     const normalAbility = pokemon.abilities.find(
         ({ is_hidden }) => !is_hidden
     );
+    
     useEffect(() => {
         async function loadSpecies() {
             const data = await getPokemonSpecies(pokemon.species.name);

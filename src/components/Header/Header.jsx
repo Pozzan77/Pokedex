@@ -90,6 +90,23 @@ function Header(props) {
                                 <button className="close-filter" onClick={() => props.setFilterVariation("")}>Remove Filter</button>
                             </div>
                         </div>
+                        <div>
+                            <div className="category-filter">
+                                <h3>Categories</h3>
+                                <div className="categories">
+                                    {props.categories.map(category => (
+                                        <button
+                                            key={category}
+                                            className={`var ${category === props.filterCategory ? "active" : ""}`}
+                                            onClick={() => props.setFilterCategory(category)}
+                                        >
+                                            {category.charAt(0).toUpperCase() + category.slice(1)}
+                                        </button>
+                                    ))}
+                                </div>
+                                <button className="close-filter" onClick={() => props.setFilterCategory("")}>Remove Filter</button>
+                            </div>
+                        </div>
                     </div>
                     <div className="filter-back"> 
                         <button onClick={() => props.setShowFilter(false)}>

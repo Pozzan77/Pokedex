@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { getPokemonList, getType} from "../pokemonApi.js";
+import { getPokemonList, getType, getPokemonSpecies} from "../pokemonApi.js";
+import { starterPokemon } from "../utils/starterPokemon.js";
 import "../App.css";
 import Header from "../components/Header/Header.jsx";
 import Footer from "../components/Footer/Footer.jsx";
@@ -27,6 +28,10 @@ function Home() {
   const [filterVariation, setFilterVariation] = useState(() =>
     sessionStorage.getItem("pokedexFilterVariation") || ""
   );
+  const [filterCategory, setFilterCategory] = useState(() =>
+    sessionStorage.getItem("pokedexFilterCategory") || ""
+  );
+  const [speciesData, setSpeciesData] = useState({});
 
   const types = [
     "normal",
@@ -55,6 +60,14 @@ function Home() {
     "gigantamax"
   ];
 
+  const categories = [
+    "all",
+    "legendary",
+    "mythical",
+    "starter",
+    "baby"
+  ]
+
   useEffect(() => {
     sessionStorage.setItem("pokedexSearch", search);
   }, [search]);
@@ -72,16 +85,17 @@ function Home() {
   }, [filterVariation]);
 
   useEffect(() => {
+  sessionStorage.setItem("pokedexFilterCategory", filterCategory);
+}, [filterCategory]);
 
+  useEffect(() => {
     async function loadPokemonList() {
-        const list = await getPokemonList();
-
-        setPokemonList(list);
+      const list = await getPokemonList();
+      setPokemonList(list);
     }
-
+  
     loadPokemonList();
-
-}, []);
+  }, []);
 
   useEffect(() => {
     sessionStorage.setItem(
@@ -119,8 +133,6 @@ function Home() {
     9: [906, 1025]
   };
   
-
-  
 function getOriginalName(name) {
   return name
     .replace("-mega-x", "")
@@ -138,9 +150,35 @@ function getOriginalName(name) {
     .replace("-paldea", "")
 }
 
+useEffect(() => {
+  async function loadSpecies() {
+    if (!pokemonList.length) {
+      return;
+    }
+
+    const species = {};
+
+    const originalPokemon = pokemonList.filter(pokemon => {
+      return pokemon.name === getOriginalName(pokemon.name);
+    });
+
+    await Promise.all(
+      originalPokemon.map(async pokemon => {
+        species[pokemon.name] = await getPokemonSpecies(pokemon.name);
+      })
+    );
+
+    setSpeciesData(species);
+  }
+
+  loadSpecies();
+}, [pokemonList]);
+
   const filteredPokemon = pokemonList.filter(pokemon => {
 
     const originalName = getOriginalName(pokemon.name);
+
+    const species = speciesData[originalName]
 
     const originalPokemon = pokemonList.find(
       p => p.name === originalName
@@ -164,6 +202,13 @@ function getOriginalName(name) {
         return false;
       }
 
+      console.log(
+        "STARTER CHECK:",
+        pokemon.name,
+        "=>",
+        originalName,
+        starterPokemon.includes(originalName)
+      );
     
 
     if (!filterVariation && Number(id) > 1025) {
@@ -199,6 +244,26 @@ function getOriginalName(name) {
       }
     }
 
+    if (filterCategory === "legendary" && !species?.is_legendary) {
+      return false;
+    }
+
+    if (
+      filterCategory === "mythical" &&
+      !species?.is_mythical
+    ) {
+      return false;
+    }
+
+    if (filterCategory === "starter" && !starterPokemon.includes(originalName)) {
+      return false
+    }
+
+    if (filterCategory === "baby" && !species?.is_baby) {
+      return false
+    }
+    
+
     const seachMatch = pokemon.name.toLowerCase().includes(search.toLowerCase()) ||
     originalId.includes(search)
 
@@ -211,6 +276,7 @@ function getOriginalName(name) {
       Number(originalId) >= generationRanges[filterGeneration][0] &&
       Number(originalId) <= generationRanges[filterGeneration][1]
     );
+
 
     return (
       seachMatch && typeMatch && generationMatch
@@ -311,6 +377,9 @@ function getOriginalName(name) {
         variations={variations}
         filterVariation={filterVariation}
         setFilterVariation={setFilterVariation}
+        filterCategory={filterCategory}
+        setFilterCategory={setFilterCategory}
+        categories={categories}
         showNav={true}
       />
       <main>
