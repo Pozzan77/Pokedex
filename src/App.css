@@ -23,3 +23,11 @@
   color: var(--gray);
   font-size: 2rem;
 }
+
+.no-result {
+  margin: 50px;
+  justify-self: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 2rem;
+  color: var(--gray);
+}

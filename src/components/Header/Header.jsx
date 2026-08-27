@@ -7,6 +7,12 @@ function Header(props) {
 
     const navigate = useNavigate()
 
+    function clearFilters() {
+        props.setFilterType("");
+        props.setFilterGeneration("");
+        props.setFilterVariation("");
+        props.setFilterCategory("all");
+      }
 
     return (
         <header className="header">
@@ -49,30 +55,29 @@ function Header(props) {
                                     <li className="filter-type">
                                         <button
                                         className={`type ${type} ${type === props.filterType ? "active" : ""}`}
-                                        onClick={() => props.setFilterType(type)}
+                                        onClick={() => props.setFilterType( props.filterType === type ? "" : type)}
                                         >
                                             {type.charAt(0).toUpperCase() + type.slice(1)}
                                         </button>
                                     </li>
                                 ))}
                             </ul>
-                            <button className="close-filter close-type" onClick={() => props.setFilterType("")}>Remove Filter</button>
                         </div>
                         <div>
                             <div className="generation-filter">
                                 <h3>Generation</h3>
                                 <div className="generations">
+                                    <button></button>
                                     {props.generations.map((generation) => (
                                         <button
                                             key={generation}
-                                            onClick={() => props.setFilterGeneration(generation)}
+                                            onClick={() => props.setFilterGeneration(props.filterGeneration === generation ? "" : generation)}
                                             className={`gen ${generation === props.filterGeneration ? "active" : ""}`}
                                         >
                                             {generation}
                                         </button>
                                     ))}
                                 </div>
-                                <button className="close-filter" onClick={() => props.setFilterGeneration("")}>Remove Filter</button>
                             </div>
                             <div className="variation-filter">
                                 <h3>Variations</h3>
@@ -81,13 +86,12 @@ function Header(props) {
                                         <button
                                             key={variation}
                                             className={`var ${variation ===props.filterVariation ? "active" : ""}`}
-                                            onClick={() => props.setFilterVariation(variation)}
+                                            onClick={() => props.setFilterVariation(props.filterVariation === variation ? "" : variation)}
                                         >
                                             {variation.charAt(0).toUpperCase() + variation.slice(1)}
                                         </button>
                                     ))}
                                 </div>
-                                <button className="close-filter" onClick={() => props.setFilterVariation("")}>Remove Filter</button>
                             </div>
                         </div>
                         <div>
@@ -104,8 +108,10 @@ function Header(props) {
                                         </button>
                                     ))}
                                 </div>
-                                <button className="close-filter" onClick={() => props.setFilterCategory("")}>Remove Filter</button>
                             </div>
+                        </div>
+                        <div className="close-filter-container">
+                            <button className="close-filter" onClick={clearFilters}>Remove Filters</button>
                         </div>
                     </div>
                     <div className="filter-back"> 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { getPokemonList, getType, getPokemonSpecies} from "../pokemonApi.js";
-import { starterPokemon } from "../utils/starterPokemon.js";
+import { starterPokemon, ultraBeastPokemon, pseudoLegendaryPokemon, paradoxPokemon, fossilPokemon } from "../utils/Categories.js";
 import "../App.css";
 import Header from "../components/Header/Header.jsx";
 import Footer from "../components/Footer/Footer.jsx";
@@ -29,7 +29,7 @@ function Home() {
     sessionStorage.getItem("pokedexFilterVariation") || ""
   );
   const [filterCategory, setFilterCategory] = useState(() =>
-    sessionStorage.getItem("pokedexFilterCategory") || ""
+    sessionStorage.getItem("pokedexFilterCategory") || "All"
   );
   const [speciesData, setSpeciesData] = useState({});
 
@@ -61,11 +61,15 @@ function Home() {
   ];
 
   const categories = [
-    "all",
+    "All",
     "legendary",
     "mythical",
+    "baby",
     "starter",
-    "baby"
+    "Fossil",
+    "Pseudo Legendary",
+    "Ultra Beasts",
+    "Paradox"
   ]
 
   useEffect(() => {
@@ -159,12 +163,24 @@ useEffect(() => {
     const species = {};
 
     const originalPokemon = pokemonList.filter(pokemon => {
-      return pokemon.name === getOriginalName(pokemon.name);
+      const id = Number(
+        pokemon.url.split("/").filter(Boolean).pop()
+      );
+
+      return (
+        id <= 1025 &&
+        pokemon.name === getOriginalName(pokemon.name)
+      );
     });
 
     await Promise.all(
       originalPokemon.map(async pokemon => {
-        species[pokemon.name] = await getPokemonSpecies(pokemon.name);
+        try {
+          species[pokemon.name] =
+            await getPokemonSpecies(pokemon.name);
+        } catch {
+          console.error("Failed:", pokemon.name);
+        }
       })
     );
 
@@ -201,15 +217,7 @@ useEffect(() => {
       ) {
         return false;
       }
-
-      console.log(
-        "STARTER CHECK:",
-        pokemon.name,
-        "=>",
-        originalName,
-        starterPokemon.includes(originalName)
-      );
-    
+  
 
     if (!filterVariation && Number(id) > 1025) {
       return false;
@@ -255,14 +263,29 @@ useEffect(() => {
       return false;
     }
 
+    if (filterCategory === "baby" && !species?.is_baby) {
+      return false
+    }
+
     if (filterCategory === "starter" && !starterPokemon.includes(originalName)) {
       return false
     }
 
-    if (filterCategory === "baby" && !species?.is_baby) {
+    if (filterCategory === "Fossil" && !fossilPokemon.includes(originalName)) {
       return false
     }
     
+    if (filterCategory === "Pseudo Legendary" && !pseudoLegendaryPokemon.includes(originalName)) {
+      return false
+    }
+
+    if (filterCategory === "Ultra Beasts" && !ultraBeastPokemon.includes(originalName)) {
+      return false
+    }
+
+    if (filterCategory === "Paradox" && !paradoxPokemon.includes(originalName)) {
+      return false
+    }
 
     const seachMatch = pokemon.name.toLowerCase().includes(search.toLowerCase()) ||
     originalId.includes(search)
@@ -384,14 +407,14 @@ useEffect(() => {
       />
       <main>
         {PokemonElements}
-        {uniquePokemon.length > visibleCount && (
+        {uniquePokemon.length > visibleCount ? (
           <button
             className="load-btn"
             onClick={() => setVisibleCount(prev => prev + 30)}
           >
             Load More
           </button>
-        )}
+        ) : (<h1 className="no-result">No Pokémon found</h1>)}
       </main>
       <Footer />
     </div>
