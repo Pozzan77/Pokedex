@@ -29,6 +29,8 @@ function PokeCard({pokemon}) {
         if (!name) return "";
     
         return name
+            .replace("nidoran-m", "Nidoran ♂")
+            .replace("nidoran-f", "Nidoran ♀")
             .replace("-female-mega", "-mega")
             .replace("-male-mega", "-mega")
             .replace("-curly-mega", "-mega")

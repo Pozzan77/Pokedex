@@ -88,7 +88,6 @@ header {
 .filter-menu {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-
   background-color: var(--gray);
   border-radius: 0 0 50px 50px;
   height: auto;
@@ -203,7 +202,7 @@ header {
 .variation-filter {
   grid-column: 2;
   display: flex;
-  height: 50%;
+  height: 30%;
   flex-direction: column;  
   align-items: center;
   justify-content: center;
@@ -223,6 +222,12 @@ header {
   border-radius: 15px;
   border: none;
   background-color: white;
+}
+
+.variations button:hover {
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: var(--red);
+  transform: scale(1.05);
 }
 
 .category-filter {
@@ -254,6 +259,12 @@ header {
   background-color: white;
 }
 
+.categories button:hover {
+  transform: scale(1.05);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: var(--red);
+}
+
 .close-filter-container {
   grid-column: 2;
   height: 100px;
@@ -262,12 +273,17 @@ header {
 
 .close-filter {
   border: none;
-  background-color: var(--red);
-  color: white;
+  background-color: white;
+  color: black;
   border-radius: 15px;
   width: 100%;
   padding: 10px;
   margin-top: 20px;
+}
+
+.close-filter:hover {
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: var(--red);
 }
 
 .type.normal {

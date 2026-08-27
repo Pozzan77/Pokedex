@@ -346,17 +346,21 @@ useEffect(() => {
     const originalA = pokemonList.find(
       p => p.name === getOriginalName(a.name)
     ) || (
-      a.name === "pyroar-mega"
-        ? pokemonList.find(p => p.name === "pyroar-male")
-        : null
+      a.name.includes("zygarde-mega")
+        ? pokemonList.find(p => p.name === "zygarde-50")
+        : a.name === "pyroar-mega"
+          ? pokemonList.find(p => p.name === "pyroar-male")
+          : null
     );
     
     const originalB = pokemonList.find(
       p => p.name === getOriginalName(b.name)
     ) || (
-      b.name === "pyroar-mega"
-        ? pokemonList.find(p => p.name === "pyroar-male")
-        : null
+      b.name.includes("zygarde-mega")
+        ? pokemonList.find(p => p.name === "zygarde-50")
+        : b.name === "pyroar-mega"
+          ? pokemonList.find(p => p.name === "pyroar-male")
+          : null
     );
   
     const idA = originalA
@@ -407,14 +411,14 @@ useEffect(() => {
       />
       <main>
         {PokemonElements}
-        {uniquePokemon.length > visibleCount ? (
+        {uniquePokemon.length > visibleCount && (
           <button
             className="load-btn"
             onClick={() => setVisibleCount(prev => prev + 30)}
           >
             Load More
           </button>
-        ) : (<h1 className="no-result">No Pokémon found</h1>)}
+        )}
       </main>
       <Footer />
     </div>
